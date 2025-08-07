@@ -1,0 +1,32 @@
+import { docInfos } from "../../assets/assets"
+import { Link } from "react-router-dom"
+
+export default function RelatedDoctors(props) {
+    const relatedDocs = docInfos.filter(ele => ele.speciality === props.doc.speciality)
+    const filtredDocs = relatedDocs.filter(ele => ele._id !== props.doc._id)
+    return (
+        <>
+            <div className="pt-16 flex flex-col space-y-4 px-4">
+                <h1 className="text-2xl font-semibold capitalize text-center" >related doctors</h1>
+                <p className="text-gray-600 font-light text-center" >Simply browse through our extensive list of trusted <br /> doctors.</p>
+                <div className="flex flex-wrap gap-6 items-center justify-center md:justify-start" >
+                    {filtredDocs.map((ele, ind) => (
+                        <div key={ind} className="w-full md:w-[250px] border border-blue-200 rounded-xl cursor-pointer hover:-translate-y-2 transition-all duration-300 overflow-hidden" >
+                            <Link to={`/appointments/${ele._id}`} >
+                                <img src={ele.image} className="bg-blue-50" />
+                                <div className="p-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="inline-block w-2 h-2 rounded-full bg-green-600"></span>
+                                        <p className="capitalize text-green-600">available</p>
+                                    </div>
+                                    <p className="font-semibold">{ele.name}</p>
+                                    <p className="text-gray-500">{ele.speciality}</p>
+                                </div>
+                            </Link>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </>
+    )
+}
