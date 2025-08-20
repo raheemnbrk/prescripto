@@ -6,14 +6,14 @@ import jwt from 'jsonwebtoken'
 
 const addDoctor = async (req, res) => {
     try {
-        const { body: { name, email, password, experience, degree, speciality, adress, about, fees } } = req
+        const { body: { name, email, password, experience, degree, speciality, address, about, fees } } = req
         const imageFile = req.file
 
         console.log(req.file)
         console.log(req.body)
 
-        if (!name || !email || !password || !experience || !degree || !speciality || !adress || !about || !fees) {
-            return res.json({ success: false, msg: "missing details" })
+        if (!name || !email || !password || !experience || !degree || !speciality || !address || !about || !fees) {
+            return res.json({ success: false, msg: "missing credentiels" })
         }
 
         if (!validator.isEmail(email)) {
@@ -41,10 +41,10 @@ const addDoctor = async (req, res) => {
             image: imageUrl,
             speciality,
             degree,
-            fees,
+            fees: Number(fees),
             experience,
             about,
-            adress: JSON.parse(adress),
+            address: JSON.parse(address),
             date: Date.now()
         }
 
@@ -54,7 +54,7 @@ const addDoctor = async (req, res) => {
     }
     catch (err) {
         console.log(err)
-        return res.json({ success: false, msg: err })
+        return res.json({ success: false, msg: err.message })
     }
 }
 
@@ -75,4 +75,15 @@ const logAdmin = async (req, res) => {
     }
 }
 
-export { addDoctor, logAdmin }
+const allDoctor = async (req, res) => {
+    try {
+        const doctors = await doctorModel.find({}).select('-password')
+        res.json({ success: true, doctors })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+export { addDoctor, logAdmin , allDoctor }

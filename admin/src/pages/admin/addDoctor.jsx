@@ -70,7 +70,7 @@ export default function AddDoctor() {
                         <label htmlFor="doc-img">
                             <img className='w-16 cursor-pointer' src={docImg ? URL.createObjectURL(docImg) : assets.upload_area} alt="" />
                         </label>
-                        <input onChange={(e) => setDocImg(e.target.files[0])} type="file" id="doc-img" hidden />
+                        <input onChange={(e) => setDocImg(e.target.files[0])} type="file" id="doc-img" hidden  accept="image/*" />
                         <p className='capitalize' >upload doctor <br />picture</p>
                     </div>
 
