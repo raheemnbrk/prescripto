@@ -1,14 +1,15 @@
-import { docInfos } from "../assets/assets"
 import { useParams } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import RelatedDoctors from "../components/appointments/relatedDoctors";
+import { AppContext } from "../context/appContext";
 
 export default function Appointments() {
+    const { doctors } = useContext(AppContext)
     const { id } = useParams()
-    const doc = docInfos.find(ele => ele._id === id)
+    const doc = doctors.find(ele => ele._id === id)
 
     const [docSlot, setDocSlot] = useState([])
     const [slotIndex, setSlotIndex] = useState(0)

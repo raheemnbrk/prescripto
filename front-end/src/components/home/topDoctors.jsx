@@ -1,15 +1,16 @@
-import { docInfos } from "../../assets/assets"
-
+import { useContext } from "react"
 import { Link } from "react-router-dom"
+import { AppContext } from "../../context/appContext"
 
 export default function TopDoctors() {
+    const { doctors } = useContext(AppContext)
     return (
         <>
             <div className="flex flex-col space-y-6 mt-36">
                 <h1 className="text-2xl font-semibold capitalize text-center">top doctors to book</h1>
                 <p className="font-lihgt text-center" >simply brows through our extense list of trusted doctors</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center">
-                    {docInfos.slice(0, 10).map((ele, ind) => (
+                    {doctors.slice(0, 10).map((ele, ind) => (
                         <div key={ind} className="border border-blue-200 rounded-xl cursor-pointer hover:-translate-y-2 transition-all duration-300 overflow-hidden" >
                             <Link to={`appointments/${ele._id}`} >
                                 <img src={ele.image} className="bg-blue-50" />

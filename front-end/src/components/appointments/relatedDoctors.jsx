@@ -1,9 +1,11 @@
-import { docInfos } from "../../assets/assets"
+import { useContext } from "react"
 import { Link } from "react-router-dom"
+import { AppContext } from "../../context/appContext"
 
 export default function RelatedDoctors(props) {
-    const relatedDocs = docInfos.filter(ele => ele.speciality === props.doc.speciality)
-    const filtredDocs = relatedDocs.filter(ele => ele._id !== props.doc._id)
+    const { doctors } = useContext(AppContext)
+    const relatedDocs = doctors.filter(ele => ele.speciality === props.doc.speciality)
+    const filtredDocs = relatedDocs.filter(ele => String(ele._id) !== String(props.doc._id))
     return (
         <>
             <div className="pt-16 flex flex-col space-y-4 px-4">

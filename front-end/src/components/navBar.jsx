@@ -62,7 +62,7 @@ export default function NavBar() {
                                 </div>
 
                                 {showMenu && (
-                                    <div className="absolute top-full right-0 mt-6 bg-stone-100 p-4 z-20 min-w-max whitespace-nowrap rounded-md shadow-md space-y-2">
+                                    <div className="absolute top-full right-0 mt-6 bg-stone-100 p-4 z-50 min-w-max whitespace-nowrap rounded-md shadow-md space-y-2">
                                         <Link to="myProfile" ><p onClick={() => setShowMenu(false)} className="text-gray-600 hover:text-black cursor-pointer">my profile</p></Link>
                                         <Link to={"myAppointments"} ><p onClick={() => setShowMenu(false)} className="text-gray-600 hover:text-black cursor-pointer">my appointments</p></Link>
                                         <p className="text-gray-600 hover:text-black cursor-pointer" onClick={() => setToken(prev => !prev)}>log out</p>

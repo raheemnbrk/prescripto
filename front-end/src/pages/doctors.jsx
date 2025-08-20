@@ -1,14 +1,15 @@
-import { docInfos } from "../assets/assets"
 import { Link, useSearchParams } from "react-router-dom"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { AppContext } from "../context/appContext"
 
 export default function Doctors() {
-    const specialities = new Set(docInfos.map(ele => ele.speciality))
+    const { doctors } = useContext(AppContext)
+    const specialities = new Set(doctors.map(ele => ele.speciality))
     const [searchParams, setSearchParams] = useSearchParams()
     const filetrSpecialty = searchParams.get("speciality")
     const filetredSpecialty = filetrSpecialty ?
-        docInfos.filter(ele => ele.speciality === filetrSpecialty)
-        : docInfos
+        doctors.filter(ele => ele.speciality === filetrSpecialty)
+        : doctors
     const [showFilter, setShowFilter] = useState(false)
     return (
         <>
