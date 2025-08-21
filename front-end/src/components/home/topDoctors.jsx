@@ -15,10 +15,11 @@ export default function TopDoctors() {
                             <Link to={`appointments/${ele._id}`} >
                                 <img src={ele.image} className="bg-blue-50" />
                                 <div className="p-4">
-                                    <div className="flex items-center gap-2">
-                                        <span className="inline-block w-2 h-2 rounded-full bg-green-600"></span>
-                                        <p className="capitalize text-green-600">available</p>
-                                    </div>
+                                    <div className={`flex capitalize items-center gap-1 ${ele.available ? "text-green-600" : "text-red-500"}`}>
+                                            <span className={`inline-block w-2 h-2 rounded-full ${ele.available ? "bg-green-600" : "bg-red-500"}`}></span>
+                                            {!ele.available && (<p>not</p>)}
+                                            <p>available</p>
+                                        </div>
                                     <p className="font-semibold">{ele.name}</p>
                                     <p className="text-gray-500">{ele.speciality}</p>
                                 </div>

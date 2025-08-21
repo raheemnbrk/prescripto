@@ -28,7 +28,7 @@ export const assets = {
     appointment_img ,
     aboutImg ,
     contactImg ,
-    profile
+    profile 
 }
 
 export const specialityData = [
