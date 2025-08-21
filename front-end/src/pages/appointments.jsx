@@ -1,13 +1,15 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useState, useEffect, useContext } from "react";
+import axios from "axios";
 
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import RelatedDoctors from "../components/appointments/relatedDoctors";
 import { AppContext } from "../context/appContext";
+import { toast } from "react-toastify";
 
 export default function Appointments() {
-    const { doctors } = useContext(AppContext)
+    const { doctors, backend_url , getDoctorsData , token } = useContext(AppContext)
     const { id } = useParams()
     const doc = doctors.find(ele => ele._id === id)
 
@@ -15,6 +17,8 @@ export default function Appointments() {
     const [slotIndex, setSlotIndex] = useState(0)
     const [slotTime, setSlotTime] = useState("")
     const dayOfWeek = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+
+    const navigate = useNavigate()
 
     const getCurrentDate = () => {
         setDocSlot([])
@@ -54,6 +58,35 @@ export default function Appointments() {
                 currentDate.setMinutes(currentDate.getMinutes() + 30)
             }
             setDocSlot(prev => [...prev, timeSolt])
+        }
+    }
+
+    const bookAppointments = async () => {
+        if (!token) {
+            toast.warn("login to book appointments")
+            return navigate("/")
+        }
+        try {
+            const date = docSlot[slotIndex][0].timeDate
+            let day = date.getDate()
+            let month = date.getMonth() + 1
+            let year = date.getFullYear()
+
+            const slotDate = day + "-" + month + "-" + year
+
+            const { data } = await  axios.post(backend_url +  "/api/user/book-appointments", { docId : doc._id , slotDate, slotTime }, { headers: { token } })
+            if(data.success){
+                toast.success("slot booked")
+                await getDoctorsData()
+                navigate("/myAppointments")
+            }
+            else{
+                toast.error(data.message)
+            }
+        }
+        catch (err) {
+            console.log(err)
+            toast.error(err.message)
         }
     }
 
@@ -107,7 +140,7 @@ export default function Appointments() {
                                 <p key={ind} onClick={() => setSlotTime(ele.time)} className={`py-2 px-4 border cursor-pointer rounded-full ${slotTime === ele.time ? "bg-primary text-white" : " border-gray-300 text-gray-400"}`} >{ele.time.toLowerCase()}</p>
                             ))}
                         </div>
-                        <button className="text-white bg-primary rounded-full cursor-pointer px-16 py-3 capitalize w-fit" >book an appointement</button>
+                        <button onClick={bookAppointments} className="text-white bg-primary rounded-full cursor-pointer px-16 py-3 capitalize w-fit" >book an appointement</button>
                     </div>
                 </div>
 

@@ -21,7 +21,7 @@ export default function NavBar() {
     return (
         <>
             <div className="flex items-center justify-between pb-5 border-b border-b-gray-400">
-                <Link>
+                <Link to={"/"} >
                     <div className="flex gap-2 text-2xl sm:text-3xl font-bold items-center cursor-pointer">
                         <PiCodaLogoFill className="text-primary text-4xl" />
                         <h1 className="capitalize text-blue-950">prescripto</h1>

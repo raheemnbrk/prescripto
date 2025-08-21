@@ -3,6 +3,8 @@ import bcrypt from "bcrypt"
 import userModel from '../models/userModel.mjs'
 import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary'
+import doctorModel from "../models/doctorsModel.mjs"
+import appointmentsModel from "../models/appointments.mjs"
 
 const registerUser = async (req, res) => {
     try {
@@ -105,4 +107,57 @@ const updateProfile = async (req, res) => {
     }
 }
 
-export { registerUser, loginUser, getProfile , updateProfile }
+const bookAppointments = async (req, res) => {
+    try {
+        const { userId } = req
+        const { slotDate, slotTime, docId } = req.body
+
+        const doctorData = await doctorModel.findById(docId).select("-select")
+        if (!doctorData.available) {
+            return res.json({ success: false, message: "doctor not available" })
+        }
+
+        let slots_Booked = doctorData.slots_booked
+
+        if (slots_Booked[slotDate]) {
+            if (slots_Booked[slotDate].includes(slotTime)) {
+                return res.json({ success: false, message: "slot not available" })
+            }
+            else {
+                slots_Booked[slotDate].push(slotTime)
+            }
+        }
+        else {
+            slots_Booked[slotDate] = []
+            slots_Booked[slotDate].push(slotTime)
+        }
+
+        const userData = await userModel.findById(userId).select("-password")
+        delete doctorData.slots_Booked
+
+        const appointmentsData = {
+            userId,
+            docId,
+            userData,
+            doctorData,
+            amount: doctorData.fees,
+            slotTime,
+            slotDate,
+            date: Date.now()
+        }
+
+        const newAppointment = new appointmentsModel(appointmentsData)
+        await newAppointment.save()
+
+        await doctorModel.findByIdAndUpdate(docId, { slots_Booked })
+
+        res.json({ success: true, message: 'appointement booked' })
+    }
+
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointments }
