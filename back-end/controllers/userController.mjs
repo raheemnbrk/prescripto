@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from "../models/doctorsModel.mjs"
 import appointmentsModel from "../models/appointments.mjs"
+import razorpay from "razorpay"
 
 const registerUser = async (req, res) => {
     try {
@@ -160,4 +161,49 @@ const bookAppointments = async (req, res) => {
     }
 }
 
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointments }
+const appointmentsList = async (req, res) => {
+    try {
+        const { userId } = req
+        const appointments = await appointmentsModel.find({ userId })
+        res.json({ success: true, appointments })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.meaage })
+    }
+}
+
+const cancelAppointments = async (req, res) => {
+    try {
+        const { appointmentsId } = req.body
+        const { userId } = req
+
+        const appointmentsData = await appointmentsModel.findById(appointmentsId)
+
+        if (appointmentsData.userId !== userId) {
+            return res.json({ success: false, message: "unAuthorized access." })
+        }
+
+        await appointmentsModel.findByIdAndUpdate(appointmentsId, { cancelled: true })
+
+        const { docId, slotDate, slotTime } = req.body
+        const doctorData = await doctorModel.findById(docId)
+
+        let slots_Booked = doctorData.slots_Booked || {}
+
+        if (slots_Booked[slotDate]) {
+            slots_Booked[slotDate] = slots_Booked[slotDate].filter(e => e !== slotTime)
+        }
+
+        await doctorModel.findByIdAndUpdate(docId, { slots_Booked })
+        res.json({ success: true, message: "appointment cancelled." })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.meaage })
+    }
+}
+
+
+
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointments, appointmentsList, cancelAppointments }
