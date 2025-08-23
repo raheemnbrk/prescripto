@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from '../models/doctorsModel.mjs'
 import jwt from 'jsonwebtoken'
+import appointmentsModel from '../models/appointments.mjs'
 
 const addDoctor = async (req, res) => {
     try {
@@ -86,4 +87,38 @@ const allDoctor = async (req, res) => {
     }
 }
 
-export { addDoctor, logAdmin , allDoctor }
+const getAppointments = async (req, res) => {
+    try {
+        const appointments = await appointmentsModel.find({})
+        res.json({ success: true, appointments })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+const cancelAppointment = async (req, res) => {
+    try {
+        const { appointmentId } = req.body
+        const appointmentData = await appointmentsModel.findByIdAndUpdate(appointmentId, { cancelled: true })
+
+        const { docId, slotDate, slotTime } = appointmentData
+        const doctorData = await doctorModel.findById(docId)
+
+        let slots_Booked = doctorData.slots_Booked || {}
+
+        if (slots_Booked[slotDate]) {
+            slots_Booked[slotDate] = slots_Booked[slotDate].filter(e => e !== slotTime)
+        }
+
+        await doctorModel.findByIdAndUpdate(docId, { slots_Booked })
+        res.json({ success: true, message: "appointment cancelled." })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+export { addDoctor, logAdmin, allDoctor, getAppointments , cancelAppointment }

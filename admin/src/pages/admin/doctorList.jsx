@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react"
 import { AdminContext } from "../../context/adminContext"
 
 export default function DoctorList() {
-    const { allDoctors, aToken, getAllDoctors } = useContext(AdminContext)
+    const { allDoctors, aToken, getAllDoctors , changeAvailablity } = useContext(AdminContext)
     useEffect(() => {
         if (aToken) {
             getAllDoctors()
@@ -19,7 +19,7 @@ export default function DoctorList() {
                             <img src={ele.image} className="bg-blue-50" />
                             <div className="p-4">
                                 <div className="flex items-center gap-2">
-                                    <input type="checkbox" checked={ele.available} />
+                                    <input onChange={()=>changeAvailablity(ele._id)} type="checkbox" checked={ele.available} className="cursor-pointer" />
                                     <p className="capitalize text-green-600">available</p>
                                 </div>
                                 <p className="font-semibold">{ele.name}</p>
