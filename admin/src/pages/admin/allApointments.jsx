@@ -25,7 +25,7 @@ export default function AllApointments() {
                         <p>fees</p>
                         <p>actions</p>
                     </div>
-                    {appointments.map((ele, ind) => (
+                    {appointments.reverse().map((ele, ind) => (
                         <div className="flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] text-gray-500 px-6 py-3 hover:bg-gray-100 rounded-md cursor-pointer" key={ind}>
                             <p className="max-sm:hidden" >{ind + 1}</p>
                             <div className="flex items-center gap-2 " >

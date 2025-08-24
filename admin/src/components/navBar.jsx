@@ -1,14 +1,17 @@
 import { useContext } from "react";
 import { PiCodaLogoFill } from "react-icons/pi";
 import { AdminContext } from '../context/adminContext'
-import { Link } from 'react-router-dom'
+import { doctorContext } from "../context/doctorContext";
 
 export default function NavBar() {
     const { aToken, setAToken } = useContext(AdminContext)
+    const { dToken , setDToken} = useContext(doctorContext)
 
     const logout = () => {
         aToken && setAToken('')
         aToken && localStorage.removeItem("aToken")
+        dToken && setDToken('')
+        dToken && localStorage.removeItem('dToken')
     }
     return (
         <>

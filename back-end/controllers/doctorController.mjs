@@ -1,6 +1,7 @@
 import doctorModel from "../models/doctorsModel.mjs"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import appointmentsModel from "../models/appointments.mjs"
 
 const changeAvailablity = async (req, res) => {
     try {
@@ -49,4 +50,54 @@ const loginDoctor = async (req, res) => {
     }
 }
 
-export { changeAvailablity, doctorList, loginDoctor }
+const getDoctorAppointments = async (req, res) => {
+    try {
+        const doctorId = req.doctorId
+        const doctorAppointments = await appointmentsModel.find({ docId: doctorId })
+        res.json({ success: true, doctorAppointments })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+const markAppointmentCompleted = async (req, res) => {
+    try {
+        const docId = req.doctorId
+        const { appointmentId } = req.body
+        const appointment = await appointmentsModel.findById(appointmentId)
+        if (appointment && appointment.docId === docId) {
+            await appointmentsModel.findByIdAndUpdate(appointmentId, { isCompleted: true })
+            res.json({ success: true, message: "appointment completed." })
+        }
+        else {
+            res.json({ success: false, message: "mark failed." })
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+const cancelAppointment = async (req, res) => {
+    try {
+        const docId = req.doctorId
+        const { appointmentId } = req.body
+        const appointment = await appointmentsModel.findById(appointmentId)
+        if (appointment && appointment.docId === docId) {
+            await appointmentsModel.findByIdAndUpdate(appointmentId, { cancelled: true })
+            res.json({ success: true, message: "appointment cacelled." })
+        }
+        else {
+            res.json({ success: false, message: "Cancel failed." })
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+export { changeAvailablity, doctorList, loginDoctor, getDoctorAppointments, markAppointmentCompleted, cancelAppointment }
