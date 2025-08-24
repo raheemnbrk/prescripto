@@ -8,7 +8,7 @@ export default function NavBar() {
 
     const logout = () => {
         aToken && setAToken('')
-        aToken && localStorage.removeItem("token")
+        aToken && localStorage.removeItem("aToken")
     }
     return (
         <>

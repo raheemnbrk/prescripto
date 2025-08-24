@@ -2,39 +2,50 @@ import { useContext, useState } from "react"
 import axios from 'axios'
 import { toast } from "react-toastify"
 import { AdminContext } from "../context/adminContext"
+import { doctorContext } from "../context/doctorContext"
 
 export default function Login() {
     const [state, setState] = useState('admin')
 
-   const { backend_url, setAToken } = useContext(AdminContext)
+    const { backend_url, setAToken } = useContext(AdminContext)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const { setDToken } = useContext(doctorContext)
 
     const onSubmitHandler = async (e) => {
         e.preventDefault()
         try {
             if (state === 'admin') {
-                const { data } = await axios.post(backend_url + `/api/admin/login` , {email , password})
-                if(data.token){
+                const { data } = await axios.post(backend_url + `/api/admin/login`, { email, password })
+                if (data.token) {
                     console.log(data)
-                    localStorage.setItem('token' , data.token)
+                    localStorage.setItem('aToken', data.token)
                     setAToken(data.token)
                     toast.success("login success")
                 }
-                else{
+                else {
                     toast.error('login failed')
                 }
             }
             else {
-
+                const { data } = await axios.post(backend_url + '/api/doctor/doctor-login', { email, password })
+                if (data.token) {
+                    console.log(data)
+                    localStorage.setItem('dToken', data.token)
+                    setDToken(data.token)
+                    toast.success("login success")
+                }
+                else {
+                    toast.error('login failed')
+                }
             }
         } catch (err) {
-
+            toast.error(err.message)
         }
     }
     return (
         <>
-            <form onSubmit={onSubmitHandler}  className="min-h-[80vh] flex items-center">
+            <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
                 <div className="flex flex-col gap-6 m-auto items-start p-8 min-w-[340px] sm:min-w-96 rounded-xl text-sm text-gray-600 shadow-lg" >
                     <p className="flex items-center gap-2 text-2xl font-semibold capitalize mx-auto" >
                         <span className="text-primary" >{state}</span>

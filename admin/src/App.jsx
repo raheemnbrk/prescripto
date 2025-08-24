@@ -11,13 +11,16 @@ import AllApointments from "./pages/admin/allApointments";
 import DashBoard from "./pages/admin/dashbord";
 import DoctorList from "./pages/admin/doctorList";
 import AddDoctor from "./pages/admin/addDoctor";
+import DoctorContextProvider, { doctorContext } from "./context/doctorContext";
 
 function AppContent() {
-  const { aToken } = useContext(AdminContext);
+  const { aToken } = useContext(AdminContext)
+  const { dToken } = useContext(doctorContext)
+
   return (
     <>
       {
-        aToken ?
+        aToken || dToken ?
           (
             <>
               <ToastContainer />
@@ -49,8 +52,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <AdminContextProvider>
-        <AppContent />
+        <DoctorContextProvider>
+          <AppContent />
+        </DoctorContextProvider>
       </AdminContextProvider>
     </BrowserRouter>
-  );
+  )
 }
