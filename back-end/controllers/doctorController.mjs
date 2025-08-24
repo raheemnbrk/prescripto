@@ -100,4 +100,36 @@ const cancelAppointment = async (req, res) => {
     }
 }
 
-export { changeAvailablity, doctorList, loginDoctor, getDoctorAppointments, markAppointmentCompleted, cancelAppointment }
+const doctorDashboard = async (req, res) => {
+    try {
+        const docId = req.doctorId
+        const appointments = await appointmentsModel.find({ docId })
+        let earning = 0
+        appointments.map(ele => {
+            if (ele.isCompleted || ele.payment) {
+                earning += ele.amount
+            }
+        })
+        let patients = []
+        appointments.map(ele => {
+            if (!patients.includes(ele.userId)) {
+                patients.push(ele.userId)
+            }
+        })
+
+        const dashboardData = {
+            earning: earning,
+            appointments: appointments.length,
+            patients: patients.length,
+            latestAppointments: appointments.reverse().slice(0, 5)
+        }
+
+        res.json({ success: true, dashboardData })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+export { changeAvailablity, doctorList, loginDoctor, getDoctorAppointments, markAppointmentCompleted, cancelAppointment, doctorDashboard }
