@@ -12,7 +12,7 @@ export default function DoctorList() {
     return (
         <>
             <div className="px-8 py-4 space-y-4" >
-                <h1 className="text-xl font-medium capitalize" >all doctors</h1>
+                <h1 className='font-semibold mt-3 ml-4 text-lg capitalize' >all doctors</h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center" >
                     {allDoctors.map((ele, ind) => (
                         <div key={ind} className="border border-blue-200 rounded-xl cursor-pointer hover:-translate-y-2 transition-all duration-300 overflow-hidden" >

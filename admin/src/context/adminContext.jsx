@@ -9,6 +9,7 @@ export default function AdminContextProvider({ children }) {
   const [aToken, setAToken] = useState(localStorage.getItem("token") || "")
   const [allDoctors, setAllDoctors] = useState([])
   const [appointments, setAppointments] = useState([])
+  const [dashData, setDashData] = useState(false)
 
   const getAllDoctors = async () => {
     try {
@@ -82,8 +83,25 @@ export default function AdminContextProvider({ children }) {
     }
   }
 
+  const getDashBoardData = async () => {
+    try {
+      const { data } = await axios.get(backend_url + '/api/admin/admin-dashboard', { headers: { aToken } })
+
+      if(data.success){
+        setDashData(data.dashData)
+        console.log(data.dashData)
+      }
+      else{
+        toast.error(data.message)
+      }
+    }
+    catch (err) {
+      toast.error(err.message)
+    }
+  }
+
   return (
-    <AdminContext.Provider value={{ backend_url, aToken, setAToken, allDoctors, getAllDoctors, changeAvailablity, getAllAppointments, appointments, calculateAge , cancelAppointment }}>
+    <AdminContext.Provider value={{ backend_url, aToken, setAToken, allDoctors, getAllDoctors, changeAvailablity, getAllAppointments, appointments, calculateAge, cancelAppointment , getDashBoardData , dashData }}>
       {children}
     </AdminContext.Provider>
   )

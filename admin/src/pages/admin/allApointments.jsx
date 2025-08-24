@@ -14,7 +14,7 @@ export default function AllApointments() {
     return (
         <>
             <div className="w-full flex flex-col space-y-6 p-4" >
-                <h1 className="text-2xl font-medium capitalize" >all appointments</h1>
+                <h1 className='font-semibold mt-3 ml-4 text-lg capitalize'  >all appointments</h1>
                 <div className="bg-white rounded-md text-sm" >
                     <div className="hidden sm:grid grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] grid-flow-col px-6 py-3 border-b capitalize" >
                         <p>#</p>

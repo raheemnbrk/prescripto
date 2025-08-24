@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from '../models/doctorsModel.mjs'
 import jwt from 'jsonwebtoken'
 import appointmentsModel from '../models/appointments.mjs'
+import userModel from '../models/userModel.mjs'
 
 const addDoctor = async (req, res) => {
     try {
@@ -121,4 +122,25 @@ const cancelAppointment = async (req, res) => {
     }
 }
 
-export { addDoctor, logAdmin, allDoctor, getAppointments , cancelAppointment }
+const dashboardData = async (req, res) => {
+    try {
+        const doctors = await doctorModel.find({})
+        const users = await userModel.find({})
+        const appointments = await appointmentsModel.find({})
+
+        const dashData = {
+            doctors: doctors.length,
+            users: users.length,
+            appointments: appointments.length,
+            latestAppointments: appointments.reverse().slice(0, 5)
+        }
+
+        res.json({ success: true, dashData })
+    }
+    catch (err) {
+        console.log(err)
+        res.json({ success: false, message: err.message })
+    }
+}
+
+export { addDoctor, logAdmin, allDoctor, getAppointments, cancelAppointment , dashboardData }
