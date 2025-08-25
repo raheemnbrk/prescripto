@@ -1,9 +1,33 @@
-import { useContext } from "react"
 import { doctorContext } from "../../context/doctorContext"
-import { useEffect } from "react"
+import { useEffect, useState, useContext } from "react"
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 export default function DoctorProfile() {
-    const { docProfile, setDocProfile, dToken, getDoctorProfile } = useContext(doctorContext)
+    const { docProfile, setDocProfile, dToken, getDoctorProfile , backend_url } = useContext(doctorContext)
+    const [isEdit, setIsEdit] = useState(false)
+
+    const updateProfile = async () => {
+        try {
+            const updatedData = {
+                address: docProfile.address,
+                available: docProfile.available,
+                fees: docProfile.fees
+            }
+            const { data } = await axios.post(backend_url + '/api/doctor/update-profile', updatedData, { headers: { token: dToken } })
+            if (data.success) {
+                toast.success(data.message)
+                setIsEdit(false)
+                await getDoctorProfile()
+            }
+            else {
+                toast.error(data.success)
+            }
+        }
+        catch (err) {
+            toast.error(err.message)
+        }
+    }
 
     useEffect(() => {
         getDoctorProfile()
@@ -30,22 +54,25 @@ export default function DoctorProfile() {
                                     <p className="capitalize text-sm font-medium" >about:</p>
                                     <p className="text-gray-600" >{docProfile.about}</p>
                                 </div>
-                                <p className="text-gray-600 font-medium mt-4" >appointment fee : {docProfile.fees}</p>
+                                <p className="text-gray-600 font-medium mt-4" >appointment fee : ${isEdit ? (<input type="number" onChange={(e) => { setDocProfile(prev => ({ ...prev, fees: e.target.value })) }} value={docProfile.fees} />) : docProfile.fees}</p>
                                 <div className="flex gap-2 py-2" >
                                     <p>adress: </p>
                                     <p className="text-sm" >
-                                        {docProfile.address.line1}
+                                        {isEdit ? <input type="text" onChange={(e) => setDocProfile(prev => ({ ...prev, address: { ...prev.address, line1: e.target.value } }))} value={docProfile.address.line1} /> : docProfile.address.line1}
                                         <br />
-                                        {docProfile.address.line2}
+                                        {isEdit ? <input type="text" onChange={(e) => setDocProfile(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))} value={docProfile.address.line2} /> : docProfile.address.line2}
                                     </p>
                                 </div>
 
                                 <div className="flex gap-1 pt-2" >
-                                    <input type="checkbox" />
+                                    <input className="cursor-pointer" checked={docProfile.available} onChange={(e) => setDocProfile(prev => ({ ...prev, available: !prev.available }))} type="checkbox" />
                                     <label htmlFor="" >available</label>
                                 </div>
 
-                                <button className="px-4 py-1 border border-primary text-sm rounded-full mt-5 cursor-pointer hover:bg-primary hover:text-white transition-all duration-300 capitalize" >edit</button>
+                                {isEdit ?
+                                    (<button onClick={updateProfile} className="px-4 py-1 border border-primary text-sm rounded-full mt-5 cursor-pointer hover:bg-primary hover:text-white transition-all duration-300 capitalize" >save informations</button>) :
+                                    (<button onClick={() => setIsEdit(true)} className="px-4 py-1 border border-primary text-sm rounded-full mt-5 cursor-pointer hover:bg-primary hover:text-white transition-all duration-300 capitalize" >edit</button>)
+                                }
                             </div>
                         </div>
                     )}

@@ -97,6 +97,8 @@ const DoctorContextProvider = ({ children }) => {
         return age
     }
 
+    
+
     const value = {
         dToken, setDToken, backend_url,
         appointments,
@@ -105,8 +107,8 @@ const DoctorContextProvider = ({ children }) => {
         markCompleted,
         cancelAppointment,
         getDashData,
-        dashData , 
-        docProfile , getDoctorProfile
+        dashData,
+        docProfile, getDoctorProfile, setDocProfile
     }
     return (
         <doctorContext.Provider value={value} >
