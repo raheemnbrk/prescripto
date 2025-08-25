@@ -41,6 +41,8 @@ export default function AllApointments() {
                             <p>{`$${ele.amount}`}</p>
                             {ele.cancelled
                                 ? (<p className="text-red-300 font-medium" >cancelled</p>)
+                                : ele.isCompleted ? 
+                                (<button className="text-green-300 font-medium" >completed</button>)
                                 : <button
                                     onClick={() => cancelAppointment(ele._id)}
                                     className="w-6 h-6 flex justify-center items-center rounded-full cursor-pointer bg-red-100 shadow"

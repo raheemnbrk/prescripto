@@ -46,7 +46,7 @@ export default function DoctorProfile() {
 
                             <div className="flex-1 border border-stone-100 rounded-lg p-8 py-7 bg-gray-100" >
                                 <p className="flex items-center gap-2 text-3xl font-medium text-gray-700" >{docProfile.name}</p>
-                                <div className="flex items-center gap-2 mt-1 text-gray-600" >
+                                <div className="flex flex-col sm:flex-row items-center gap-2 mt-1 text-gray-600" >
                                     <p>{docProfile.degree} - {docProfile.speciality}</p>
                                     <button className="border-1 border-gray-600 px-2 rounded-full text-sm">{docProfile.experience}</button>
                                 </div>
@@ -54,13 +54,13 @@ export default function DoctorProfile() {
                                     <p className="capitalize text-sm font-medium" >about:</p>
                                     <p className="text-gray-600" >{docProfile.about}</p>
                                 </div>
-                                <p className="text-gray-600 font-medium mt-4" >appointment fee : ${isEdit ? (<input type="number" onChange={(e) => { setDocProfile(prev => ({ ...prev, fees: e.target.value })) }} value={docProfile.fees} />) : docProfile.fees}</p>
-                                <div className="flex gap-2 py-2" >
+                                <p className="text-gray-600 font-medium mt-4" >appointment fee : ${isEdit ? (<input className="px-2 py-1 rounded-md border-1 border-gray-300 outline-0" type="number" onChange={(e) => { setDocProfile(prev => ({ ...prev, fees: e.target.value })) }} value={docProfile.fees} />) : docProfile.fees}</p>
+                                <div className="flex flex-col sm:flex-row gap-2 py-2" >
                                     <p>adress: </p>
                                     <p className="text-sm" >
-                                        {isEdit ? <input type="text" onChange={(e) => setDocProfile(prev => ({ ...prev, address: { ...prev.address, line1: e.target.value } }))} value={docProfile.address.line1} /> : docProfile.address.line1}
+                                        {isEdit ? <input className="px-2 py-1 rounded-md border-1 border-gray-300 outline-0" type="text" onChange={(e) => setDocProfile(prev => ({ ...prev, address: { ...prev.address, line1: e.target.value } }))} value={docProfile.address.line1} /> : docProfile.address.line1}
                                         <br />
-                                        {isEdit ? <input type="text" onChange={(e) => setDocProfile(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))} value={docProfile.address.line2} /> : docProfile.address.line2}
+                                        {isEdit ? <input className="px-2 py-1 rounded-md border-1 border-gray-300 mt-3 outline-0" type="text" onChange={(e) => setDocProfile(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))} value={docProfile.address.line2} /> : docProfile.address.line2}
                                     </p>
                                 </div>
 

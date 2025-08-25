@@ -16,6 +16,9 @@ export default function MyAppointments() {
             if (data.success) {
                 setAppointments(data.appointments.reverse())
             }
+            else{
+                toast.error(data.message)
+            }
         }
         catch (err) {
             console.log(err)
@@ -71,7 +74,7 @@ export default function MyAppointments() {
                     }
                 }
                 catch (err) {
-
+                    toast.error(err.message)
                 }
             }
         }
@@ -119,16 +122,22 @@ export default function MyAppointments() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-4 capitalize font-semibold self-start ml-6 md:self-center" >
-                                {!ele.cancelled && ele.payment && (<button onClick={() => appointmentPay(ele._id)} className="hover:bg-primary text-neutral-500 hover:text-white cursor-pointer px-4 py-2 border-2" >paid</button>)}
-                                {!ele.cancelled && !ele.payment && (<button onClick={() => appointmentPay(ele._id)} className="hover:bg-primary text-neutral-500 hover:text-white cursor-pointer px-4 py-2 border-1 border-neutral-500 hover:border-primary" >pay online</button>)}
-                                {!ele.cancelled && (<button onClick={() => cancelAppointments(ele)} className="px-4 py-2 w-fit border border-neutral-500 cursor-pointer text-neutral-500 hover:bg-red-500 hover:text-white hover:border-red-500" >cancel appointement</button>)}
-                                {ele.cancelled && (<button className="bg-white text-red-900 border-2 border-red-900 cursor-pointer px-4 py-2" >appointment cancelled</button>)}
-                            </div>
+                            {ele.isCompleted ?
+                                (<button onClick={() => appointmentPay(ele._id)} className="text-green-600 cursor-pointer px-10 py-2 border-2 border-green-600" >completed</button>)
+                                :
+                                (
+                                    <div className="flex flex-col gap-4 capitalize font-semibold self-start ml-6 md:self-center" >
+                                        {!ele.cancelled && ele.payment && (<button onClick={() => appointmentPay(ele._id)} className="hover:bg-primary text-neutral-500 hover:text-white cursor-pointer px-4 py-2 border-2" >paid</button>)}
+                                        {!ele.cancelled && !ele.payment && (<button onClick={() => appointmentPay(ele._id)} className="hover:bg-primary text-neutral-500 hover:text-white cursor-pointer px-4 py-2 border-1 border-neutral-500 hover:border-primary" >pay online</button>)}
+                                        {!ele.cancelled && (<button onClick={() => cancelAppointments(ele)} className="px-4 py-2 w-fit border border-neutral-500 cursor-pointer text-neutral-500 hover:bg-red-500 hover:text-white hover:border-red-500" >cancel appointement</button>)}
+                                        {ele.cancelled && (<button className="bg-white text-red-900 border-2 border-red-900 cursor-pointer px-4 py-2" >appointment cancelled</button>)}
+                                    </div>
+                                )
+                            }
                         </div>
                     ))}
                 </div>
-            </div>
+            </div >
         </>
     )
 }

@@ -102,7 +102,7 @@ export default function Appointments() {
                         <img className="bg-primary w-full md:w-[900px] object-cover rounded-md" src={doc.image} alt={doc.name} />
                     </div>
 
-                    <div className="flex flex-col relative z-50 bg-white bottom-24 md:bottom-0 w-[90%] mx-auto space-y-2 border border-gray-300 rounded-md p-8 py-5" >
+                    <div className="flex flex-col relative z-0 bg-white bottom-24 md:bottom-0 w-[90%] mx-auto space-y-2 border border-gray-300 rounded-md p-8 py-5" >
                         <h1 className="flex items-center gap-2 text-3xl font-semibold capitalize text-gray-600" >
                             <span>{doc.name}</span>
                             <RiVerifiedBadgeFill className="text-blue-800" />
