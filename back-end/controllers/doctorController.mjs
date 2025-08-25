@@ -132,4 +132,15 @@ const doctorDashboard = async (req, res) => {
     }
 }
 
-export { changeAvailablity, doctorList, loginDoctor, getDoctorAppointments, markAppointmentCompleted, cancelAppointment, doctorDashboard }
+const getDoctorProfile = async (req, res) => {
+    try {
+        const docId = req.doctorId
+        const doctorProfile = await doctorModel.findById(docId).select('-password')
+        res.json({ success: true, doctorProfile })
+    }
+    catch (err) {
+        res.json({ success: false, message: err.message })
+    }
+}
+
+export { changeAvailablity, doctorList, loginDoctor, getDoctorAppointments, markAppointmentCompleted, cancelAppointment, doctorDashboard , getDoctorProfile }
