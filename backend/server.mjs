@@ -6,6 +6,8 @@ import cloudinaryConnect from './config/cloudinary.mjs'
 import adminRouter from './routes/adminRoute.mjs'
 import { doctorRouter } from './routes/doctorRoute.mjs'
 import userRouter from './routes/userRoute.mjs'
+import dotenv from "dotenv"
+dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -13,15 +15,12 @@ connectDb()
 cloudinaryConnect()
 
 app.use(express.json())
-app.use(cors({
-  origin: ["http://localhost:5173"],
-  credentials: true
-}))
+app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 
-app.use('/api/admin' , adminRouter)
-app.use('/api/doctor' , doctorRouter)
-app.use('/api/user' , userRouter)
+app.use('/api/admin', adminRouter)
+app.use('/api/doctor', doctorRouter)
+app.use('/api/user', userRouter)
 
 app.get('/', (req, res) => {
     return res.status(200).send({ msg: "hello world" })

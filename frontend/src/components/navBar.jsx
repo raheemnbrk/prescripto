@@ -12,6 +12,7 @@ export default function NavBar() {
     const { token, setToken, userData } = useContext(AppContext)
     const [showMenu, setShowMenu] = useState(false)
     const [showList, setShowList] = useState(false)
+    console.log(userData)
 
     const logOut = () => {
         setToken('')
@@ -62,7 +63,7 @@ export default function NavBar() {
                 </div>
 
                 <div className="flex gap-4 items-center" >
-                    {token ?
+                    {token && userData ?
                         (
                             <div className="relative">
                                 <div className="flex gap-1 cursor-pointer items-center" onClick={() => setShowMenu(prev => !prev)}>
