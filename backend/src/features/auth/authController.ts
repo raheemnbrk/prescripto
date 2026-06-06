@@ -7,6 +7,7 @@ import * as authService from "./authService";
 import { authServiceReturn } from "../../shared/types/authTypes";
 import { REFRESH_TOKEN_EXPIRES_MS } from "../../shared/utils/jwt";
 import prisma from "../../shared/config/prisma";
+import { ApiErrors } from "../../shared/utils/ApiErrors";
 
 export const registerController = async (
   req: Request,
@@ -109,6 +110,32 @@ export const logout = async (
     return res
       .status(200)
       .json({ success: true, message: "Logged out successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const refreshController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const token = (req as any).cookies.refreshToken;
+
+    if (!token)
+      throw new ApiErrors(401, "Unauthorized access. Please login again.");
+
+    const result = await authService.refreshService(token);
+
+    res.cookie("refreshToken", result.newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: REFRESH_TOKEN_EXPIRES_MS,
+    });
+
+    res.status(200).json({ success: true, accessToken: result.newAccessToken });
   } catch (err) {
     next(err);
   }
