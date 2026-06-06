@@ -58,13 +58,27 @@ export const loginController = async (
       maxAge: REFRESH_TOKEN_EXPIRES_MS,
     });
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        accessToken: result.accessToken,
-        user: result.user,
-      });
+    res.status(201).json({
+      success: true,
+      accessToken: result.accessToken,
+      user: result.user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { user } = req as any;
+
+    const result = await authService.getUserService(user.id);
+
+    res.status(200).json({ success: true, result });
   } catch (err) {
     next(err);
   }
