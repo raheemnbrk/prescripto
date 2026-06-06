@@ -6,6 +6,7 @@ import {
 import * as authService from "./authService";
 import { authServiceReturn } from "../../shared/types/authTypes";
 import { REFRESH_TOKEN_EXPIRES_MS } from "../../shared/utils/jwt";
+import prisma from "../../shared/config/prisma";
 
 export const registerController = async (
   req: Request,
@@ -79,6 +80,35 @@ export const getUser = async (
     const result = await authService.getUserService(user.id);
 
     res.status(200).json({ success: true, result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { refreshToken } = (req as any).cookies;
+
+    if (refreshToken) {
+      await prisma.refreshToken.updateMany({
+        where: { token: refreshToken },
+        data: { isRevoked: true },
+      });
+    }
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Logged out successfully" });
   } catch (err) {
     next(err);
   }
