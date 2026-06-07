@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   loginSchema,
   registerSchema,
+  updateProfileSchema,
 } from "../../shared/validators/authValidation";
 import * as authService from "./authService";
 import { authServiceReturn } from "../../shared/types/authTypes";
@@ -136,6 +137,30 @@ export const refreshController = async (
     });
 
     res.status(200).json({ success: true, accessToken: result.newAccessToken });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const data = updateProfileSchema.parse((req as any).body);
+    const { id } = (req as any).user;
+    const file = (req as any).file;
+
+    const result = await authService.updateProfileService(id, data, file);
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Profile updated successfully",
+        user: result.user,
+      });
   } catch (err) {
     next(err);
   }

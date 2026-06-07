@@ -4,6 +4,7 @@ import {
   loginInput,
   payload,
   registerInput,
+  updateProfileInput,
 } from "../../shared/types/authTypes";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
 import bcrypt from "bcrypt";
@@ -12,6 +13,7 @@ import {
   signAccessToken,
   signRefreshToken,
 } from "../../shared/utils/jwt";
+import { uploadImage } from "../../shared/utils/uploadImage";
 
 export const registerService = async (input: registerInput) => {
   const { name, email, password } = input;
@@ -124,4 +126,32 @@ export const refreshService = async (token: string) => {
   });
 
   return { newAccessToken, newRefreshToken };
+};
+
+export const updateProfileService = async (
+  id: string,
+  input: updateProfileInput,
+  file?: Express.Multer.File,
+) => {
+  const { name, dob, gender, phoneNumber } = input;
+
+  let imageUrl: string | undefined;
+  if (file) {
+    const base64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+    imageUrl = await uploadImage(base64, "prescripto/users");
+  }
+
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      ...(name && { name }),
+      ...(dob && { dob }),
+      ...(gender && { gender }),
+      ...(phoneNumber && { phoneNumber }),
+      ...(imageUrl && { image: imageUrl }),
+    },
+  });
+
+  const { password: _, ...userWithoutPassword } = user;
+  return { user: userWithoutPassword };
 };

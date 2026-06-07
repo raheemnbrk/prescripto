@@ -12,8 +12,6 @@ export const authenticate = async (
     if (!authHeader || !authHeader.startsWith("Bearer "))
       throw new ApiErrors(401, "Unauthorized access. Please login again.");
 
-    console.log("Hello")
-
     const token = authHeader.split(" ")[1];
     const payload = verifyAccess(token);
 
