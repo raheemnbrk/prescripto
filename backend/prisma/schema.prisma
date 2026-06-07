@@ -19,6 +19,7 @@ model User {
   createdAt     DateTime @default(now())
 
   refreshTokens RefreshToken[]
+  doctor        Doctor?
 }
 
 enum Role {
@@ -38,4 +39,24 @@ model RefreshToken {
   replacedBy String?
 
   createdAt  DateTime @default(now())
+}
+
+model Doctor {
+  userId         String       @id
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  specialization String
+  experience     Int
+  fees           Float
+  about          String
+  degree         String
+  address        String
+  available      Boolean      @default(true)
+  status         DoctorStatus @default(PENDING)
+}
+
+enum DoctorStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
