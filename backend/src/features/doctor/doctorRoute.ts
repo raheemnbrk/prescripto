@@ -11,23 +11,23 @@ import {
 import { authenticate } from "../../shared/middlewares/authenticate";
 import { authorizeDoctor } from "../../shared/middlewares/authorizeDoctor";
 
-const doctorRoute = Router();
+const doctorRouter = Router();
 
-doctorRoute.post("/apply", upload.single("image"), applyDoctor);
-doctorRoute.post(
+doctorRouter.post("/apply", upload.single("image"), applyDoctor);
+doctorRouter.post(
   "/update",
   authenticate,
   authorizeDoctor,
   upload.single("image"),
   updateDoctor,
 );
-doctorRoute.get("/all-doctors", getAllDoctors);
-doctorRoute.get("/profile", authenticate, authorizeDoctor, getDoctorProfile);
-doctorRoute.post(
+doctorRouter.get("/all-doctors", getAllDoctors);
+doctorRouter.get("/profile", authenticate, authorizeDoctor, getDoctorProfile);
+doctorRouter.post(
   "/available",
   authenticate,
   authorizeDoctor,
   toggleAvailability,
 );
-doctorRoute.get("/:id", getDoctorByID);
-export default doctorRoute;
+doctorRouter.get("/:id", getDoctorByID);
+export default doctorRouter;
