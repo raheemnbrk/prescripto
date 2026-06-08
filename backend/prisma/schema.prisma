@@ -20,6 +20,7 @@ model User {
 
   refreshTokens RefreshToken[]
   doctor        Doctor?
+  appointments  Appointment[]
 }
 
 enum Role {
@@ -53,10 +54,33 @@ model Doctor {
   address        String
   available      Boolean      @default(true)
   status         DoctorStatus @default(PENDING)
+  appointments   Appointment[]
 }
 
 enum DoctorStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+model Appointment{
+  id        String  @id @default(uuid())
+  userId    String   
+  user      User  @relation(fields :  [userId] , references : [id] , onDelete : Cascade)
+
+  docId     String
+  doctor    Doctor @relation(fields : [docId] , references : [userId] , onDelete : Cascade)
+
+  fees      Float
+  status    AppointmentStatus @default(PENDING)   
+  date      DateTime
+
+  createdAt DateTime    @default(now())  
+}
+
+enum AppointmentStatus{
+  PENDING
+  CANCELLED
+  CONFIRMED
+  COMPLETED
 }
