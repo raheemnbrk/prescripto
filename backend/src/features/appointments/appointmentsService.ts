@@ -24,7 +24,7 @@ export const bookAppointment = async (
         gte: new Date(slotTime.getTime() - 60 * 60 * 1000),
         lte: new Date(slotTime.getTime() + 60 * 60 * 1000),
       },
-      status: { in: ["COMPLETED", "CONFIRMED", "PENDING"] },
+      status: { in: ["PENDING", "CONFIRMED"] },
     },
   });
 
@@ -37,12 +37,29 @@ export const bookAppointment = async (
   const existingSLot = await prisma.appointment.findFirst({
     where: {
       docId,
-      status: { in: ["CONFIRMED", "COMPLETED", "PENDING"] },
+      status: { in: ["PENDING", "CONFIRMED"] },
       date: slotTime,
     },
   });
 
   if (existingSLot) throw new ApiErrors(409, "This slot is already booked.");
+
+  const sameDayBooking = await prisma.appointment.findFirst({
+    where: {
+      userId,
+      docId,
+      status: { in: ["PENDING", "CONFIRMED"] },
+      date: {
+        gte: new Date(slotTime.setHours(0, 0, 0, 0)),
+        lte: new Date(slotTime.setHours(23, 59, 59, 999)),
+      },
+    },
+  });
+  if (sameDayBooking)
+    throw new ApiErrors(
+      409,
+      "You already have an appointment with this doctor today.",
+    );
 
   await prisma.appointment.create({
     data: {
