@@ -109,3 +109,48 @@ export const updateDoctorProfile = async (
   const { password: _, ...userWithoutPassword } = user;
   return { user: userWithoutPassword };
 };
+
+export const getAllDoctorsService = async (search?: string) => {
+  const doctors = await prisma.doctor.findMany({
+    where: {
+      status: "APPROVED",
+      ...(search && {
+        OR: [
+          { user: { name: { contains: search, mode: "insensitive" } } },
+          { specialization: { contains: search, mode: "insensitive" } },
+        ],
+      }),
+    },
+    include: { user: { select: { name: true, email: true, image: true } } },
+  });
+
+  return doctors.map(({ user, ...doctor }) => ({
+    name: user.name,
+    email: user.email,
+    image: user.image,
+    ...doctor,
+  }));
+};
+
+export const getDoctorByIDService = async (id: string) => {
+  const doctor = await prisma.doctor.findUnique({
+    where: { userId: id },
+    include: { user: { select: { name: true, email: true, image: true } } },
+  });
+
+  if (!doctor) throw new ApiErrors(404, "Doctor not found.");
+  const { user, ...rest } = doctor;
+  return { ...rest, ...user };
+};
+
+export const getDoctorProfileService = async (id: string) => {
+  const doctor = await prisma.doctor.findUnique({
+    where: { userId: id },
+    include: { user: { omit: { password: true } } },
+  });
+
+  if (!doctor) throw new ApiErrors(404, "Access denied,please login again");
+
+  const { user, ...rest } = doctor;
+  return { ...rest, ...user };
+};

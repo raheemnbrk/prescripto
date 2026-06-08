@@ -42,13 +42,60 @@ export const updateDoctor = async (
       (req as any).file,
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Doctor profile updated Successfully.",
-        user: result.user,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Doctor profile updated Successfully.",
+      user: result.user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const search = (req as any).query.search as string | undefined;
+
+    const result = await doctorService.getAllDoctorsService(search);
+
+    return res.status(200).json({ success: true, doctors: result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getDoctorByID = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id as string;
+    if (!id) throw new ApiErrors(404, "Can't access doctor profile");
+
+    const doctor = await doctorService.getDoctorByIDService(id);
+
+    res.status(200).json({ success: true, doctor });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getDoctorProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = (req as any).doctor;
+
+    const doctor = await doctorService.getDoctorProfileService(id);
+
+    res.json({ success: true, doctor });
   } catch (err) {
     next(err);
   }

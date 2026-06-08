@@ -1,6 +1,12 @@
 import { Router } from "express";
 import { upload } from "../../shared/config/multer";
-import { applyDoctor, updateDoctor } from "./doctorController";
+import {
+  applyDoctor,
+  getAllDoctors,
+  getDoctorByID,
+  getDoctorProfile,
+  updateDoctor,
+} from "./doctorController";
 import { authenticate } from "../../shared/middlewares/authenticate";
 import { authorizeDoctor } from "../../shared/middlewares/authorizeDoctor";
 
@@ -14,5 +20,7 @@ doctorRoute.post(
   upload.single("image"),
   updateDoctor,
 );
-
+doctorRoute.get("/all-doctors", getAllDoctors);
+doctorRoute.get("/profile", authenticate, authorizeDoctor, getDoctorProfile);
+doctorRoute.get("/:id", getDoctorByID);
 export default doctorRoute;
