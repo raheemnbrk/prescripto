@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import * as adminService from "./adminServices";
+import { ApiErrors } from "../../shared/utils/ApiErrors";
 
 export const getAllDoctors = async (
   req: Request,
@@ -53,19 +54,35 @@ export const rejectDoctor = async (
   }
 };
 
-export const deleteDoctor = async (
+export const getAllUsers = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { id } = (req as any).params;
+    const search = req.query.search as string | undefined;
+    const users = await adminService.getAllUsers(search);
 
-    await adminService.deleteDoctorService(id);
+    res.status(200).json({ success: true, users });
+  } catch (err) {
+    next(err);
+  }
+};
 
-    return res
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id as string;
+    if (!id) throw new ApiErrors(404, "user not found");
+
+    await adminService.deleteUser(id);
+
+    res
       .status(200)
-      .json({ success: true, message: "Doctor deleted successfully." });
+      .json({ success: true, message: "User deleted successfully." });
   } catch (err) {
     next(err);
   }

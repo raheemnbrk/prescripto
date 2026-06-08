@@ -42,9 +42,21 @@ export const rejectDoctorService = async (id: string) => {
   });
 };
 
-export const deleteDoctorService = async (id: string) => {
-  const existing = await prisma.doctor.findUnique({ where: { userId: id } });
-  if (!existing) throw new ApiErrors(404, "Doctor not found.");
+export const getAllUsers = async (search?: string) => {
+  const users = await prisma.user.findMany({
+    where: {
+      ...(search && {
+        OR: [{ name: { contains: search, mode: "insensitive" } }],
+      }),
+    },
+    omit: { password: true },
+  });
 
+  return users;
+};
+
+export const deleteUser = async (id: string) => {
+  const existing = await prisma.user.findUnique({ where: { id } });
+  if (!existing) throw new ApiErrors(404, "User not found");
   await prisma.user.delete({ where: { id } });
 };
