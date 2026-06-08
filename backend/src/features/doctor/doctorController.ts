@@ -100,3 +100,25 @@ export const getDoctorProfile = async (
     next(err);
   }
 };
+
+export const toggleAvailability = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = (req as any).doctor;
+    const availability = req.body.availability as boolean;
+
+    const doctor = await doctorService.toggleAvailabilityService(
+      id,
+      availability,
+    );
+    const message = availability
+      ? "You are now available"
+      : "You are now not available.";
+    res.status(200).json({ success: true, message, doctor });
+  } catch (err) {
+    next(err);
+  }
+};

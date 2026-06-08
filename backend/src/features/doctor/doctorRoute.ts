@@ -5,6 +5,7 @@ import {
   getAllDoctors,
   getDoctorByID,
   getDoctorProfile,
+  toggleAvailability,
   updateDoctor,
 } from "./doctorController";
 import { authenticate } from "../../shared/middlewares/authenticate";
@@ -22,5 +23,11 @@ doctorRoute.post(
 );
 doctorRoute.get("/all-doctors", getAllDoctors);
 doctorRoute.get("/profile", authenticate, authorizeDoctor, getDoctorProfile);
+doctorRoute.post(
+  "/available",
+  authenticate,
+  authorizeDoctor,
+  toggleAvailability,
+);
 doctorRoute.get("/:id", getDoctorByID);
 export default doctorRoute;

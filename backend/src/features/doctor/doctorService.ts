@@ -154,3 +154,19 @@ export const getDoctorProfileService = async (id: string) => {
   const { user, ...rest } = doctor;
   return { ...rest, ...user };
 };
+
+export const toggleAvailabilityService = async (
+  id: string,
+  availability: boolean,
+) => {
+  const doctor = await prisma.doctor.update({
+    where: { userId: id },
+    data: { available: availability },
+    include: { user: { omit: { password: true } } },
+  });
+
+  if (!doctor) throw new ApiErrors(404, "Access denied.please login again");
+
+  const { user, ...rest } = doctor;
+  return { ...rest, ...user };
+};
