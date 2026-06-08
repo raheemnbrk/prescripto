@@ -14,6 +14,7 @@ import {
   signRefreshToken,
 } from "../../shared/utils/jwt";
 import { uploadImage } from "../../shared/utils/uploadImage";
+import { Role } from "@prisma/client";
 
 export const registerService = async (input: registerInput) => {
   const { name, email, password } = input;
@@ -22,11 +23,17 @@ export const registerService = async (input: registerInput) => {
 
   const hashed = await bcrypt.hash(password, 10);
 
+  const adminEmails =
+    process.env.ADMIN_EMAILS?.split(",").map((email) => email.trim()) ?? [];
+
+  const role: Role = adminEmails.includes(email) ? "ADMIN" : "PATIENT";
+
   const user = await prisma.user.create({
     data: {
       name,
       email,
       password: hashed,
+      role,
     },
   });
 
