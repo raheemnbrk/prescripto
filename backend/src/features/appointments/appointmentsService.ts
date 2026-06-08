@@ -24,7 +24,7 @@ export const bookAppointment = async (
         gte: new Date(slotTime.getTime() - 60 * 60 * 1000),
         lte: new Date(slotTime.getTime() + 60 * 60 * 1000),
       },
-      status: { in: ["PENDING", "CONFIRMED"] },
+      status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
     },
   });
 
@@ -37,8 +37,11 @@ export const bookAppointment = async (
   const existingSLot = await prisma.appointment.findFirst({
     where: {
       docId,
-      status: { in: ["PENDING", "CONFIRMED"] },
-      date: slotTime,
+      status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
+      date: {
+        gte: new Date(slotTime.getTime() - 60 * 60 * 1000),
+        lte: new Date(slotTime.getTime() + 60 * 60 * 1000),
+      },
     },
   });
 
@@ -48,7 +51,7 @@ export const bookAppointment = async (
     where: {
       userId,
       docId,
-      status: { in: ["PENDING", "CONFIRMED"] },
+      status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
       date: {
         gte: new Date(slotTime.setHours(0, 0, 0, 0)),
         lte: new Date(slotTime.setHours(23, 59, 59, 999)),
@@ -68,5 +71,55 @@ export const bookAppointment = async (
       date: slotTime,
       fees: doctor.fees,
     },
+  });
+};
+
+export const getPatientAppointmentsService = async (id: string) => {
+  const appointments = await prisma.appointment.findMany({
+    where: { userId: id },
+    include: {
+      doctor: {
+        include: {
+          user: {
+            select: { name: true, image: true },
+          },
+        },
+      },
+    },
+  });
+
+  return appointments.map(({ doctor, ...apt }) => ({
+    ...apt,
+    doctorName: doctor.user.name,
+    doctorImage: doctor.user.image,
+    specialization: doctor.specialization,
+  }));
+};
+
+export const cancelAppointmentService = async (id: string, userId: string) => {
+  const appointment = await prisma.appointment.findUnique({
+    where: { id },
+  });
+
+  if (!appointment) throw new ApiErrors(404, "Appointment not found");
+  if (appointment.userId !== userId)
+    throw new ApiErrors(403, "Not your appointment.");
+  if (appointment.status === "CANCELLED")
+    throw new ApiErrors(400, "Appointment already cancelled.");
+  if (appointment.status === "COMPLETED")
+    throw new ApiErrors(400, "Cannot cancel a completed appointment.");
+
+  const twoHoursBefore = new Date(
+    appointment.date.getTime() - 2 * 60 * 60 * 1000,
+  );
+  if (new Date() > twoHoursBefore)
+    throw new ApiErrors(
+      400,
+      "Cannot cancel an appointment less than 2 hours before.",
+    );
+
+  await prisma.appointment.update({
+    where: { id },
+    data: { status: "CANCELLED" },
   });
 };

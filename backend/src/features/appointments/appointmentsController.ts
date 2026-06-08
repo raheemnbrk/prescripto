@@ -21,3 +21,39 @@ export const bookAppointment = async (
     next(err);
   }
 };
+
+export const getPatientAppointments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = (req as any).user.id as string;
+
+    const appointments =
+      await appointmentService.getPatientAppointmentsService(id);
+
+    return res.status(200).json({ success: true, appointments });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const cancelAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id as string;
+    const userId = (req as any).user.id;
+
+    await appointmentService.cancelAppointmentService(id, userId);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "appointment cancelled successfully." });
+  } catch (err) {
+    next(err);
+  }
+};
