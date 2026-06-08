@@ -1,5 +1,5 @@
 import prisma from "../../shared/config/prisma";
-import { doctorInput } from "../../shared/types/authTypes";
+import { doctorInput, updateDoctorInput } from "../../shared/types/authTypes";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
 import { uploadImage } from "../../shared/utils/uploadImage";
 import bcrypt from "bcrypt";
@@ -48,4 +48,64 @@ export const applyDoctorService = async (
     },
     include: { doctor: true },
   });
+};
+
+export const updateDoctorProfile = async (
+  id: string,
+  input: updateDoctorInput,
+  file: Express.Multer.File,
+) => {
+  const existing = await prisma.user.findUnique({
+    where: { id },
+    include: { doctor: true },
+  });
+  if (!existing) throw new ApiErrors(404, "Access denied , please login");
+  if (!existing.doctor)
+    throw new ApiErrors(404, "Access denied , please login");
+
+  const {
+    name,
+    phoneNumber,
+    dob,
+    gender,
+    specialization,
+    experience,
+    fees,
+    about,
+    degree,
+    address,
+    available,
+  } = input;
+
+  let imageUrl: string | undefined;
+  if (file) {
+    const base64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+    imageUrl = await uploadImage(base64, "prescripto/users");
+  }
+
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      ...(name && { name }),
+      ...(dob && { dob }),
+      ...(gender && { gender }),
+      ...(phoneNumber && { phoneNumber }),
+      ...(imageUrl && { image: imageUrl }),
+      doctor: {
+        update: {
+          ...(fees && { fees }),
+          ...(experience && { experience }),
+          ...(degree && { degree }),
+          ...(specialization && { specialization }),
+          ...(about && { about }),
+          ...(address && { address }),
+          ...(available && { available }),
+        },
+      },
+    },
+    include: { doctor: true },
+  });
+
+  const { password: _, ...userWithoutPassword } = user;
+  return { user: userWithoutPassword };
 };

@@ -6,7 +6,10 @@ import {
   updateProfileSchema,
 } from "../validators/authValidation";
 import z from "zod";
-import { createDoctorSchema } from "../validators/doctorValidation";
+import {
+  createDoctorSchema,
+  updateDoctorSchema,
+} from "../validators/doctorValidation";
 
 export interface payload extends JwtPayload {
   id: string;
@@ -16,6 +19,7 @@ export interface payload extends JwtPayload {
 export type registerInput = z.infer<typeof registerSchema>;
 export type loginInput = z.infer<typeof loginSchema>;
 export type updateProfileInput = z.infer<typeof updateProfileSchema>;
+export type updateDoctorInput = z.infer<typeof updateDoctorSchema>;
 
 export type doctorInput = z.infer<typeof createDoctorSchema>;
 

@@ -12,7 +12,10 @@ export const loginSchema = z.object({
 });
 
 export const updateProfileSchema = z.object({
-  name: z.string().min(3, "Name should at least contains 3 characters."),
+  name: z
+    .string()
+    .min(3, "Name should at least contains 3 characters.")
+    .optional(),
   image: z.string().optional(),
   gender: z.enum(["male", "female"]).optional(),
   dob: z.coerce.date().optional(),

@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
-import { createDoctorSchema } from "../../shared/validators/doctorValidation";
+import {
+  createDoctorSchema,
+  updateDoctorSchema,
+} from "../../shared/validators/doctorValidation";
 import { applyDoctorService } from "./doctorService";
+import * as doctorService from "./doctorService";
 
 export const applyDoctor = async (
   req: Request,
@@ -18,6 +22,33 @@ export const applyDoctor = async (
       success: true,
       message: "Application submitted successfully. Wait for admin approval.",
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateDoctor = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const data = updateDoctorSchema.parse((req as any).body);
+    const { id } = (req as any).user;
+
+    const result = await doctorService.updateDoctorProfile(
+      id,
+      data,
+      (req as any).file,
+    );
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Doctor profile updated Successfully.",
+        user: result.user,
+      });
   } catch (err) {
     next(err);
   }
