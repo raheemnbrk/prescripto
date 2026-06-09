@@ -172,16 +172,6 @@ export const adminCancelAppointments = async (id: string) => {
   if (appointment.status === "COMPLETED")
     throw new ApiErrors(400, "Cannot cancel a completed appointment.");
 
-  const twoHoursBefore = new Date(
-    appointment.date.getTime() - 2 * 60 * 60 * 1000,
-  );
-
-  if (new Date() > twoHoursBefore)
-    throw new ApiErrors(
-      400,
-      "Cannot cancel an appointment less than 2 hours before.",
-    );
-
   await prisma.appointment.update({
     where: { id },
     data: { status: "CANCELLED" },
@@ -244,4 +234,60 @@ export const getDoctorAppointments = async (
   });
 
   return appointments;
+};
+
+export const doctorCancelAppointment = async (docId: string, id: string) => {
+  const appointment = await prisma.appointment.findUnique({
+    where: { id: id, docId: docId },
+  });
+
+  if (!appointment) throw new ApiErrors(404, "Appointment doesn't exist");
+  if (appointment.status === "CANCELLED")
+    throw new ApiErrors(400, "Appointment is already cancelled.");
+  if (appointment.status === "COMPLETED")
+    throw new ApiErrors(400, "Appointment is already completed.");
+
+  const twoHoursBefore = new Date(
+    appointment.date.getTime() - 2 * 60 * 60 * 1000,
+  );
+
+  if (new Date() > twoHoursBefore)
+    throw new ApiErrors(
+      400,
+      "Cannot cancel an appointment less than 2 hours before.",
+    );
+
+  await prisma.appointment.update({
+    where: { id: id, docId: docId },
+    data: { status: "CANCELLED" },
+  });
+};
+
+export const completeAppointmentService = async (id: string, docId: string) => {
+  const appointment = await prisma.appointment.findUnique({ where: { id } });
+
+  if (!appointment) throw new ApiErrors(404, "Appointment not found.");
+  if (appointment.docId !== docId) throw new ApiErrors(403, "Not your appointment.");
+  if (appointment.status !== "CONFIRMED") throw new ApiErrors(400, "Only confirmed appointments can be completed.");
+
+  const now = new Date();
+  if (now < appointment.date) throw new ApiErrors(400, "Cannot complete a future appointment.");
+
+  await prisma.appointment.update({
+    where: { id },
+    data: { status: "COMPLETED" },
+  });
+};
+
+export const confirmAppointmentService = async (id: string, docId: string) => {
+  const appointment = await prisma.appointment.findUnique({ where: { id } });
+
+  if (!appointment) throw new ApiErrors(404, "Appointment not found.");
+  if (appointment.docId !== docId) throw new ApiErrors(403, "Not your appointment.");
+  if (appointment.status !== "PENDING") throw new ApiErrors(400, "Only pending appointments can be confirmed.");
+
+  await prisma.appointment.update({
+    where: { id },
+    data: { status: "CONFIRMED" },
+  });
 };

@@ -114,3 +114,54 @@ export const getDoctorAppointments = async (
     next(err);
   }
 };
+
+export const doctorCancelAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id as string;
+    if (!id) throw new ApiErrors(400, "Can't find an appointment");
+
+    const docId = (req as any).doctor.id as string;
+
+    await appointmentService.doctorCancelAppointment(id, docId);
+
+    return res
+      .status(201)
+      .json({ success: true, message: "Appointment cancelled successfully." });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const confirmAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id as string;
+    const docId = (req as any).user.id as string;
+    await appointmentService.confirmAppointmentService(id, docId);
+    res.status(200).json({ success: true, message: "Appointment confirmed." });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const completeAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id as string;
+    const docId = (req as any).user.id as string;
+    await appointmentService.completeAppointmentService(id, docId);
+    res.status(200).json({ success: true, message: "Appointment completed." });
+  } catch (err) {
+    next(err);
+  }
+};

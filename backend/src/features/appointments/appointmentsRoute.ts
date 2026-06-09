@@ -4,6 +4,8 @@ import {
   adminCancelAppointment,
   bookAppointment,
   cancelAppointment,
+  completeAppointment,
+  confirmAppointment,
   getAllAppointments,
   getDoctorAppointments,
   getPatientAppointments,
@@ -31,6 +33,20 @@ aptRouter.get(
   authenticate,
   authorizeDoctor,
   getDoctorAppointments,
+);
+
+aptRouter.post(
+  "/doctor/complete/:id",
+  authenticate,
+  authorizeDoctor,
+  completeAppointment,
+);
+
+aptRouter.post(
+  "/doctor/confirm/:id",
+  authenticate,
+  authorizeDoctor,
+  confirmAppointment,
 );
 
 export default aptRouter;
