@@ -26,4 +26,5 @@ export const appointmentFilterSchema = z.object({
   searchBy: z.enum(["doctor", "user"]).optional(),
   status: z.nativeEnum(AppointmentStatus).optional(),
   date: z.string().optional(),
+  range: z.enum(["last7days", "last30days", "last12months", "all"]).optional(),
 });

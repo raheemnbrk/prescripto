@@ -96,3 +96,21 @@ export const adminCancelAppointment = async (
     next(err);
   }
 };
+
+export const getDoctorAppointments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const filters = appointmentFilterSchema.parse(req.query);
+    const docId = (req as any).doctor.id as string;
+    const appointments = await appointmentService.getDoctorAppointments(
+      docId,
+      filters,
+    );
+    return res.status(200).json({ success: true, appointments });
+  } catch (err) {
+    next(err);
+  }
+};

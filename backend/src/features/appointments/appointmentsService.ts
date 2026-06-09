@@ -137,9 +137,11 @@ export const getAllAppointmentsService = async (
   const { search, searchBy, date, status } = filters;
 
   const start = date
-    ? new Date(new Date(date).setHours(9, 0, 0, 0))
+    ? new Date(new Date(date).setHours(0, 0, 0, 0))
     : undefined;
-  const end = date ? new Date(new Date(date).setHours(17, 0, 0, 0)) : undefined;
+  const end = date
+    ? new Date(new Date(date).setHours(23, 59, 59, 999))
+    : undefined;
   const appointments = await prisma.appointment.findMany({
     where: {
       ...(search &&
@@ -184,4 +186,62 @@ export const adminCancelAppointments = async (id: string) => {
     where: { id },
     data: { status: "CANCELLED" },
   });
+};
+
+export const getDoctorAppointments = async (
+  docId: string,
+  filters: appointmentFilterInput,
+) => {
+  const { search, date, status, range } = filters;
+
+  const getDateRange = () => {
+    if (range === "all" || !range || !date) return undefined;
+
+    const target = new Date(date);
+    const endOfDay = new Date(target);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    switch (range) {
+      case "last7days": {
+        return {
+          gte: new Date(target.getTime() - 7 * 24 * 60 * 60 * 1000),
+          lte: endOfDay,
+        };
+      }
+      case "last30days": {
+        return {
+          gte: new Date(target.getTime() - 30 * 24 * 60 * 60 * 1000),
+          lte: endOfDay,
+        };
+      }
+      case "last12months": {
+        return {
+          gte: new Date(
+            target.getFullYear() - 1,
+            target.getMonth(),
+            target.getDate(),
+          ),
+          lte: endOfDay,
+        };
+      }
+      default:
+        return undefined;
+    }
+  };
+
+  const dateFilter = getDateRange();
+
+  const appointments = await prisma.appointment.findMany({
+    where: {
+      docId,
+      ...(search && {
+        user: { name: { contains: search, mode: "insensitive" } },
+      }),
+      ...(status && { status: status }),
+      ...(dateFilter && { date: dateFilter }),
+    },
+    orderBy: { date: "asc" },
+  });
+
+  return appointments;
 };
