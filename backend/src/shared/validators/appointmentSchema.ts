@@ -1,3 +1,4 @@
+import { AppointmentStatus } from "@prisma/client";
 import z, { date } from "zod";
 
 export const appointmentSchema = z.object({
@@ -18,4 +19,11 @@ export const appointmentSchema = z.object({
       const day = date.getDay();
       return day !== 5;
     }, "Can't book an appointment in weekend"),
+});
+
+export const appointmentFilterSchema = z.object({
+  search: z.string().optional(),
+  searchBy: z.enum(["doctor", "user"]).optional(),
+  status: z.nativeEnum(AppointmentStatus).optional(),
+  date: z.string().optional(),
 });

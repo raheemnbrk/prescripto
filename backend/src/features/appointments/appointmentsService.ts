@@ -1,5 +1,8 @@
 import prisma from "../../shared/config/prisma";
-import { appointmentInput } from "../../shared/types/appointmentsType";
+import {
+  appointmentFilterInput,
+  appointmentInput,
+} from "../../shared/types/appointmentsType";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
 
 export const bookAppointment = async (
@@ -13,6 +16,9 @@ export const bookAppointment = async (
   if (!doctor.available) throw new ApiErrors(400, "Doctor is not available");
   if (doctor.status !== "APPROVED")
     throw new ApiErrors(400, "Doctor is not approved");
+  if (doctor.userId === userId) {
+    throw new ApiErrors(400, "You cannot book an appointment with yourself.");
+  }
 
   const slotTime = new Date(date);
   slotTime.setSeconds(0, 0);
@@ -86,6 +92,7 @@ export const getPatientAppointmentsService = async (id: string) => {
         },
       },
     },
+    orderBy: { date: "desc" },
   });
 
   return appointments.map(({ doctor, ...apt }) => ({
@@ -112,6 +119,61 @@ export const cancelAppointmentService = async (id: string, userId: string) => {
   const twoHoursBefore = new Date(
     appointment.date.getTime() - 2 * 60 * 60 * 1000,
   );
+  if (new Date() > twoHoursBefore)
+    throw new ApiErrors(
+      400,
+      "Cannot cancel an appointment less than 2 hours before.",
+    );
+
+  await prisma.appointment.update({
+    where: { id },
+    data: { status: "CANCELLED" },
+  });
+};
+
+export const getAllAppointmentsService = async (
+  filters: appointmentFilterInput,
+) => {
+  const { search, searchBy, date, status } = filters;
+
+  const start = date
+    ? new Date(new Date(date).setHours(9, 0, 0, 0))
+    : undefined;
+  const end = date ? new Date(new Date(date).setHours(17, 0, 0, 0)) : undefined;
+  const appointments = await prisma.appointment.findMany({
+    where: {
+      ...(search &&
+        searchBy === "doctor" && {
+          doctor: { user: { name: { contains: search, mode: "insensitive" } } },
+        }),
+      ...(search &&
+        searchBy === "user" && {
+          user: { name: { contains: search, mode: "insensitive" } },
+        }),
+      ...(status && { status: status }),
+      ...(date && { date: { gte: start, lte: end } }),
+    },
+  });
+
+  return appointments;
+};
+
+export const adminCancelAppointments = async (id: string) => {
+  const appointment = await prisma.appointment.findUnique({
+    where: { id },
+  });
+
+  if (!appointment) throw new ApiErrors(404, "Appointment not found");
+
+  if (appointment.status === "CANCELLED")
+    throw new ApiErrors(400, "Appointment already cancelled.");
+  if (appointment.status === "COMPLETED")
+    throw new ApiErrors(400, "Cannot cancel a completed appointment.");
+
+  const twoHoursBefore = new Date(
+    appointment.date.getTime() - 2 * 60 * 60 * 1000,
+  );
+
   if (new Date() > twoHoursBefore)
     throw new ApiErrors(
       400,

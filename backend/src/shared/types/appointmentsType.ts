@@ -1,4 +1,6 @@
 import z from "zod";
-import { appointmentSchema } from "../validators/appointmentSchema";
+import { appointmentFilterSchema, appointmentSchema } from "../validators/appointmentSchema";
 
 export type appointmentInput = z.infer<typeof appointmentSchema>;
+
+export type appointmentFilterInput = z.infer<typeof appointmentFilterSchema>
