@@ -5,8 +5,24 @@ import { errorHandler } from "./shared/middlewares/errorHandler";
 import doctorRouter from "./features/doctor/doctorRoute";
 import adminRouter from "./features/admin/adminRoute";
 import aptRouter from "./features/appointments/appointmentsRoute";
+import cors from "cors";
 
 const app = express();
+
+const allowedOrigins = ["http://localhost:5173", process.env.CLIENT_URL!];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 app.use(cookieParser());

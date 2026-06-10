@@ -14,7 +14,7 @@ const authRouter = Router();
 
 authRouter.post("/register", registerController);
 authRouter.post("/login", loginController);
-authRouter.get("/get-user", authenticate, getUser);
+authRouter.get("/getMe", authenticate, getUser);
 authRouter.post("/logout", logout);
 authRouter.post("/refresh", refreshController);
 authRouter.post("/update-profile", authenticate , upload.single("image"), updateProfile);
