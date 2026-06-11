@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { registerSchema } from "../../types/authTypes";
 import { register } from "../../lib/api/authApi";
 import { useAuthStore } from "../../store/authStore";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { registerSchema } from "../../validation/authValidation";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -140,7 +140,7 @@ export default function Register() {
             required
           />
           <button
-          type="button"
+            type="button"
             className="ml-auto cursor-pointer mr-4 text-xl"
             onClick={() => setIsHidden((prev) => !prev)}
           >

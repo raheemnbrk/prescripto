@@ -16,17 +16,24 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
+
+    const isRefreshEndpoint = original.url?.includes("/auth/refresh");
+
+    if (error.response?.status === 401 && !original._retry && !isRefreshEndpoint) {
       original._retry = true;
       try {
         const { data } = await api.post("/auth/refresh");
-        useAuthStore
-          .getState()
-          .setAuth(useAuthStore.getState().user!, data.accessToken);
+        const state = useAuthStore.getState();
+        const refreshedUser = data.user ?? state.user;
+        if (refreshedUser) {
+          useAuthStore.getState().setAuth(refreshedUser, data.accessToken);
+        } else {
+          useAuthStore.getState().setAccessToken(data.accessToken);
+        }
         original.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(original);
       } catch {
-        useAuthStore.getState().logout();
+        useAuthStore.getState().clearAuth();
         window.location.href = "/login";
       }
     }

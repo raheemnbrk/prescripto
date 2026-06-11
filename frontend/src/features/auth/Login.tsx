@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { LoginSchema } from "../../types/authTypes";
 import { login } from "../../lib/api/authApi";
 import { useAuthStore } from "../../store/authStore";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { LoginSchema } from "../../validation/authValidation";
 
 export default function Login() {
   const navigate = useNavigate();
