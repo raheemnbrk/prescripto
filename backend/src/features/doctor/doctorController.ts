@@ -58,9 +58,9 @@ export const getAllDoctors = async (
   next: NextFunction,
 ) => {
   try {
-    const search = (req as any).query.search as string | undefined;
+    const { search, filter } = (req as any).query;
 
-    const result = await doctorService.getAllDoctorsService(search);
+    const result = await doctorService.getAllDoctorsService(search, filter);
 
     return res.status(200).json({ success: true, doctors: result });
   } catch (err) {

@@ -21,7 +21,7 @@ doctorRouter.post(
   upload.single("image"),
   updateDoctor,
 );
-doctorRouter.get("/all-doctors", getAllDoctors);
+doctorRouter.get("/all", getAllDoctors);
 doctorRouter.get("/profile", authenticate, authorizeDoctor, getDoctorProfile);
 doctorRouter.post(
   "/available",

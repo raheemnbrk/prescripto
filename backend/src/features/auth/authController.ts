@@ -10,6 +10,16 @@ import { REFRESH_TOKEN_EXPIRES_MS } from "../../shared/utils/jwt";
 import prisma from "../../shared/config/prisma";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite:
+    process.env.NODE_ENV === "production"
+      ? ("strict" as const)
+      : ("lax" as const),
+  maxAge: REFRESH_TOKEN_EXPIRES_MS,
+};
+
 export const registerController = async (
   req: Request,
   res: Response,
@@ -24,12 +34,7 @@ export const registerController = async (
       password,
     });
 
-    res.cookie("refreshToken", result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: REFRESH_TOKEN_EXPIRES_MS,
-    });
+    res.cookie("refreshToken", result.refreshToken, cookieOptions);
 
     return res.status(201).json({
       success: true,
@@ -54,12 +59,7 @@ export const loginController = async (
       password,
     });
 
-    res.cookie("refreshToken", result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: REFRESH_TOKEN_EXPIRES_MS,
-    });
+    res.cookie("refreshToken", result.refreshToken, cookieOptions);
 
     res.status(201).json({
       success: true,
@@ -129,14 +129,9 @@ export const refreshController = async (
 
     const result = await authService.refreshService(token);
 
-    res.cookie("refreshToken", result.newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: REFRESH_TOKEN_EXPIRES_MS,
-    });
+    res.cookie("refreshToken", result.newRefreshToken, cookieOptions);
 
-    res.status(200).json({ success: true, accessToken: result.newAccessToken });
+    res.status(200).json({ success: true , user : result.user, accessToken: result.newAccessToken });
   } catch (err) {
     next(err);
   }
@@ -154,13 +149,11 @@ export const updateProfile = async (
 
     const result = await authService.updateProfileService(id, data, file);
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Profile updated successfully",
-        user: result.user,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: result.user,
+    });
   } catch (err) {
     next(err);
   }

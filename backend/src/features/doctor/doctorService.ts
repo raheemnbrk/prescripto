@@ -110,15 +110,16 @@ export const updateDoctorProfile = async (
   return { user: userWithoutPassword };
 };
 
-export const getAllDoctorsService = async (search?: string) => {
+export const getAllDoctorsService = async (
+  search?: string,
+  filter?: string,
+) => {
   const doctors = await prisma.doctor.findMany({
     where: {
+      ...(filter && { specialization: filter }),
       status: "APPROVED",
       ...(search && {
-        OR: [
-          { user: { name: { contains: search, mode: "insensitive" } } },
-          { specialization: { contains: search, mode: "insensitive" } },
-        ],
+        user: { name: { contains: search, mode: "insensitive" } },
       }),
     },
     include: { user: { select: { name: true, email: true, image: true } } },

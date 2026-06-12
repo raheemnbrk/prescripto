@@ -132,7 +132,12 @@ export const refreshService = async (token: string) => {
     where: { userId: stored.user.id, expiresAt: { lt: new Date() } },
   });
 
-  return { newAccessToken, newRefreshToken };
+  const user = await prisma.user.findUnique({
+    where: { id: stored.userId },
+    omit: { password: true },
+  });
+
+  return { user, newAccessToken, newRefreshToken };
 };
 
 export const updateProfileService = async (
