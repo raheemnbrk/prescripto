@@ -7,6 +7,8 @@ import PublicRoutes from "./PublicRoutes";
 import Doctors from "../features/patient/doctor";
 import MainLayout from "./mainLayout";
 import ApplyDoctor from "@/features/auth/applyDoctor";
+import About from "@/features/patient/about";
+import Contact from "@/features/patient/contact";
 
 export default function AppRouter() {
   return (
@@ -20,6 +22,8 @@ export default function AppRouter() {
         <Route element={<PublicRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/doctors" element={<Doctors />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Route>
       </Route>
     </Routes>

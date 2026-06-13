@@ -1,3 +1,11 @@
+import Banner from "@/components/home/banner";
+import Hero from "@/components/home/hero";
+
 export default function Home() {
-  return <h1>hello</h1>;
+  return (
+    <div className="flex flex-col gap-10" >
+      <Hero />
+      <Banner />
+    </div>
+  );
 }

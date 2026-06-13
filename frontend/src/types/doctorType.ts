@@ -1,6 +1,7 @@
 import type { User } from "./authTypes";
 
-export interface Doctor extends Omit<User, "image"> {
+export interface Doctor extends Omit<User, "id" | "image"> {
+  userId: string;
   image: string;
   specialization: string;
   experience: number;
@@ -12,3 +13,7 @@ export interface Doctor extends Omit<User, "image"> {
   status: "PENDING" | "APPROVED" | "REJECTED";
 }
 
+export interface doctorFilter {
+  search: string;
+  specialization: string;
+}

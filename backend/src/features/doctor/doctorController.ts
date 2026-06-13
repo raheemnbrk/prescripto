@@ -122,3 +122,16 @@ export const toggleAvailability = async (
     next(err);
   }
 };
+
+export const getAllSpecializationController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const specializations = await doctorService.getAllSpecializationService();
+    res.status(200).json({ success: true, specializations });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -32,7 +32,7 @@ export default function NavBar() {
 
   return (
     <nav className="border-b border-gray-200 bg-white">
-      <div className="max-w-7xl mx-auto py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto pb-4 flex items-center justify-between">
         <Link to="/">
           <div className="flex items-center gap-2">
             <PiCodaLogoFill className="text-blue-600 text-4xl" />

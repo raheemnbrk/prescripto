@@ -3,6 +3,7 @@ import { upload } from "../../shared/config/multer";
 import {
   applyDoctor,
   getAllDoctors,
+  getAllSpecializationController,
   getDoctorByID,
   getDoctorProfile,
   toggleAvailability,
@@ -29,5 +30,6 @@ doctorRouter.post(
   authorizeDoctor,
   toggleAvailability,
 );
+doctorRouter.get("/specializations", getAllSpecializationController);
 doctorRouter.get("/:id", getDoctorByID);
 export default doctorRouter;

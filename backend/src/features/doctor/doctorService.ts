@@ -171,3 +171,13 @@ export const toggleAvailabilityService = async (
   const { user, ...rest } = doctor;
   return { ...rest, ...user };
 };
+
+export const getAllSpecializationService = async () => {
+  const result = await prisma.doctor.findMany({
+    where: { status: "APPROVED" },
+    select: { specialization: true },
+    distinct: ["specialization"],
+  });
+
+  return result.map((d) => d.specialization);
+};
