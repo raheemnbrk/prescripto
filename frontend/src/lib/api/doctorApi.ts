@@ -23,3 +23,13 @@ export const getAllSpecializations = async (): Promise<string[]> => {
   const res = await api.get("/doctor/specializations");
   return res.data.specializations;
 };
+
+export const getRelatedDoctors = async (
+  id: string,
+  specialization: string,
+): Promise<Doctor[]> => {
+  const res = await api.get(`/doctor/${id}/related`, {
+    params: specialization,
+  });
+  return res.data.doctors;
+};

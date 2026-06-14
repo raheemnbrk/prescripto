@@ -6,6 +6,7 @@ import {
   getAllSpecializationController,
   getDoctorByID,
   getDoctorProfile,
+  getRelatedDoctorsController,
   toggleAvailability,
   updateDoctor,
 } from "./doctorController";
@@ -32,4 +33,5 @@ doctorRouter.post(
 );
 doctorRouter.get("/specializations", getAllSpecializationController);
 doctorRouter.get("/:id", getDoctorByID);
+doctorRouter.get("/:id/related", getRelatedDoctorsController);
 export default doctorRouter;

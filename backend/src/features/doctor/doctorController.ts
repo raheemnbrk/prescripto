@@ -135,3 +135,19 @@ export const getAllSpecializationController = async (
     next(err);
   }
 };
+
+export const getRelatedDoctorsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const id = req.params.id as string;
+  const specialization = req.query.specialization as string;
+
+  const doctors = await doctorService.getRelatedDoctorsService(
+    id,
+    specialization,
+  );
+
+  res.status(200).json({ success: true, doctors });
+};

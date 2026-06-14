@@ -8,7 +8,7 @@ export default function About() {
           <span className="text-gray-600">about</span>
           <span>us</span>
         </h1>
-        <div className="flex flex-col md:flex-row gap-12 items-center">
+        <div className="flex flex-col md:flex-row gap-12 items-center px-12">
           <div className="w-full md:w-[50%} h-auto">
             <img className="w-full" src={assets.aboutImg} />
           </div>
@@ -36,11 +36,11 @@ export default function About() {
             </p>
           </div>
         </div>
-        <h1 className="text-2xl capitalize gap-2 flex items-center">
+        <h1 className="text-2xl capitalize gap-2 flex items-center justify-center">
           <span>why</span>
           <span className="text-gray-600">choose us</span>
         </h1>
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col md:flex-row justify-center items-center">
           <div className="flex flex-col space-y-6 border border-gray-200 px-12 py-16 hover:bg-primary transition-all duration-200 group cursor-pointer">
             <h1 className="text-xl font-semibold uppercase text-gray-700 group-hover:text-white">
               efficiency:

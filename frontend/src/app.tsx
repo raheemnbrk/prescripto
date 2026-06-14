@@ -4,7 +4,7 @@ import { useAuthStore } from "./store/authStore";
 import { refresh } from "./lib/api/authApi";
 
 export default function App() {
-  const { setAuth, setLoading, clearAuth , user } = useAuthStore();
+  const { setAuth, setLoading, clearAuth } = useAuthStore();
   useEffect(() => {
     const restoreSession = async () => {
       try {
@@ -19,8 +19,6 @@ export default function App() {
 
     restoreSession();
   }, []);
-
-  console.log(user)
 
   return <AppRouter />;
 }

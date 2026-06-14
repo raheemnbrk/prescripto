@@ -181,3 +181,20 @@ export const getAllSpecializationService = async () => {
 
   return result.map((d) => d.specialization);
 };
+
+export const getRelatedDoctorsService = async (
+  id: string,
+  specialization: string,
+) => {
+  const doctors = await prisma.doctor.findMany({
+    where: {
+      specialization,
+      status: "APPROVED",
+      userId: { not: id },
+    },
+    take: 4,
+    include: { user: { omit: { password: true } } },
+  });
+
+  return doctors.map(({ user, ...rest }) => ({ ...rest, ...user }));
+};
