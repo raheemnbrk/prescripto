@@ -13,62 +13,50 @@ export const bookAppointment = async (
   const { date } = input;
   const doctor = await prisma.doctor.findUnique({ where: { userId: docId } });
   if (!doctor) throw new ApiErrors(404, "Doctor not found.");
-  if (!doctor.available) throw new ApiErrors(400, "Doctor is not available");
-  if (doctor.status !== "APPROVED")
-    throw new ApiErrors(400, "Doctor is not approved");
-  if (doctor.userId === userId) {
-    throw new ApiErrors(400, "You cannot book an appointment with yourself.");
-  }
+  if (!doctor.available) throw new ApiErrors(400, "Doctor is not available.");
+  if (doctor.status !== "APPROVED") throw new ApiErrors(400, "Doctor is not approved.");
+  if (doctor.userId === userId) throw new ApiErrors(400, "You cannot book an appointment with yourself.");
 
   const slotTime = new Date(date);
   slotTime.setSeconds(0, 0);
 
+  const TWO_HOURS = 2 * 60 * 60 * 1000;
+
   const conflictUser = await prisma.appointment.findFirst({
     where: {
       userId,
-      date: {
-        gte: new Date(slotTime.getTime() - 60 * 60 * 1000),
-        lte: new Date(slotTime.getTime() + 60 * 60 * 1000),
-      },
       status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
+      date: {
+        gte: new Date(slotTime.getTime() - TWO_HOURS),
+        lte: new Date(slotTime.getTime() + TWO_HOURS),
+      },
     },
   });
+  if (conflictUser) throw new ApiErrors(409, "You must leave at least 2 hours between appointments.");
 
-  if (conflictUser)
-    throw new ApiErrors(
-      409,
-      "You already have an appointment within 1 hour of this slot.",
-    );
-
-  const existingSLot = await prisma.appointment.findFirst({
+  const existingSlot = await prisma.appointment.findFirst({
     where: {
       docId,
-      status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
-      date: {
-        gte: new Date(slotTime.getTime() - 60 * 60 * 1000),
-        lte: new Date(slotTime.getTime() + 60 * 60 * 1000),
-      },
+      status: { in: ["PENDING", "CONFIRMED"] },
+      date: slotTime,
     },
   });
+  if (existingSlot) throw new ApiErrors(409, "This slot is already booked.");
 
-  if (existingSLot) throw new ApiErrors(409, "This slot is already booked.");
+  const dayStart = new Date(slotTime);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(slotTime);
+  dayEnd.setHours(23, 59, 59, 999);
 
   const sameDayBooking = await prisma.appointment.findFirst({
     where: {
       userId,
       docId,
-      status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
-      date: {
-        gte: new Date(slotTime.setHours(0, 0, 0, 0)),
-        lte: new Date(slotTime.setHours(23, 59, 59, 999)),
-      },
+      status: { in: ["PENDING", "CONFIRMED"] },
+      date: { gte: dayStart, lte: dayEnd },
     },
   });
-  if (sameDayBooking)
-    throw new ApiErrors(
-      409,
-      "You already have an appointment with this doctor today.",
-    );
+  if (sameDayBooking) throw new ApiErrors(409, "You already have an appointment with this doctor today.");
 
   await prisma.appointment.create({
     data: {
@@ -267,11 +255,14 @@ export const completeAppointmentService = async (id: string, docId: string) => {
   const appointment = await prisma.appointment.findUnique({ where: { id } });
 
   if (!appointment) throw new ApiErrors(404, "Appointment not found.");
-  if (appointment.docId !== docId) throw new ApiErrors(403, "Not your appointment.");
-  if (appointment.status !== "CONFIRMED") throw new ApiErrors(400, "Only confirmed appointments can be completed.");
+  if (appointment.docId !== docId)
+    throw new ApiErrors(403, "Not your appointment.");
+  if (appointment.status !== "CONFIRMED")
+    throw new ApiErrors(400, "Only confirmed appointments can be completed.");
 
   const now = new Date();
-  if (now < appointment.date) throw new ApiErrors(400, "Cannot complete a future appointment.");
+  if (now < appointment.date)
+    throw new ApiErrors(400, "Cannot complete a future appointment.");
 
   await prisma.appointment.update({
     where: { id },
@@ -283,8 +274,10 @@ export const confirmAppointmentService = async (id: string, docId: string) => {
   const appointment = await prisma.appointment.findUnique({ where: { id } });
 
   if (!appointment) throw new ApiErrors(404, "Appointment not found.");
-  if (appointment.docId !== docId) throw new ApiErrors(403, "Not your appointment.");
-  if (appointment.status !== "PENDING") throw new ApiErrors(400, "Only pending appointments can be confirmed.");
+  if (appointment.docId !== docId)
+    throw new ApiErrors(403, "Not your appointment.");
+  if (appointment.status !== "PENDING")
+    throw new ApiErrors(400, "Only pending appointments can be confirmed.");
 
   await prisma.appointment.update({
     where: { id },

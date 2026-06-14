@@ -27,6 +27,9 @@ export default function RelatedDoctors({
           ))}
         </div>
       )}
+      {!isLoading && !isError && doctors?.length === 0 && (
+        <p className="text-center text-gray-500 py-10">No doctors found.</p>
+      )}
       {!isLoading && !isError && doctors && doctors.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
           {doctors.map((doctor) => (

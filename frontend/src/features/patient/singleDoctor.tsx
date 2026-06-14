@@ -1,3 +1,4 @@
+import BookAppointment from "@/components/doctors/bookAppointment";
 import RelatedDoctors from "@/components/doctors/relatedDoctors";
 import DoctorDetailLoading from "@/components/loading/doctorDetailsLoading";
 import { useDoctor } from "@/hooks/useDoctor";
@@ -80,6 +81,7 @@ export default function SingleDoctor() {
           </div>
         </div>
       </div>
+      <BookAppointment docId={id} available={doctor.available} />
       <RelatedDoctors id={id} specialization={doctor.specialization} />
     </div>
   );
