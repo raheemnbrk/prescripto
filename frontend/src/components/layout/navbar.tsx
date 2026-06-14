@@ -114,11 +114,12 @@ export default function NavBar() {
               >
                 <img
                   src={
-                    user.image ||
-                    "https://www.rawpixel.com/search/icon%20profile%20png"
+                    user.image?.trim()
+                      ? user.image
+                      : "https://www.gravatar.com/avatar/?d=mp"
                   }
                   alt={user.name}
-                  className="w-10 h-10 rounded-full object-cover border"
+                  className="w-10 h-10 rounded-full object-cover "
                 />
                 <FaAngleDown
                   className={`transition-transform ${
@@ -165,7 +166,6 @@ export default function NavBar() {
             </Link>
           )}
 
-          {/* Mobile Menu */}
           <HiMenuAlt3
             className="text-3xl text-blue-600 cursor-pointer md:hidden"
             onClick={() => setShowList(true)}

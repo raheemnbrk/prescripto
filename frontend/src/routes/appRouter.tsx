@@ -10,6 +10,8 @@ import ApplyDoctor from "@/features/auth/applyDoctor";
 import About from "@/features/patient/about";
 import Contact from "@/features/patient/contact";
 import SingleDoctor from "@/features/patient/singleDoctor";
+import ProtectedRoutes from "./protectedRoutes";
+import MyAppointments from "@/features/patient/appointments";
 
 export default function AppRouter() {
   return (
@@ -26,6 +28,9 @@ export default function AppRouter() {
           <Route path="/doctors/:id" element={<SingleDoctor />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+        </Route>
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/appointments" element={<MyAppointments />} />
         </Route>
       </Route>
     </Routes>

@@ -1,8 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useState } from "react";
 import { generateSlots } from "@/utils/generateSlot";
-import { bookAppointment } from "@/lib/api/appointmentsApi";
+import {
+  bookAppointment,
+  cancelAppointment,
+  getPatientAppointments,
+} from "@/lib/api/appointmentsApi";
 
 export const useBookAppointment = (docId: string) => {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -34,4 +38,30 @@ export const useBookAppointment = (docId: string) => {
     handleBook,
     isPending,
   };
+};
+
+export const usePatientAppointments = () =>
+  useQuery({
+    queryKey: ["patient-appointments"],
+    queryFn: getPatientAppointments,
+  });
+
+export const useCancelAppointment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => cancelAppointment(id),
+
+    onSuccess: () => {
+      toast.success("Appointment cancelled.");
+
+      queryClient.invalidateQueries({
+        queryKey: ["patient-appointments"],
+      });
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message ?? "Something went wrong.");
+    },
+  });
 };
