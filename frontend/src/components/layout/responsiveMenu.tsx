@@ -30,7 +30,7 @@ export default function ResponsiveMenu({
           onClick={() => setShowList(false)}
           className={({ isActive }) =>
             `px-4 py-3 rounded-lg font-medium transition ${
-              isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-100"
+              isActive ? "bg-blue-50 text-main" : "hover:bg-gray-100"
             }`
           }
         >
@@ -42,7 +42,7 @@ export default function ResponsiveMenu({
           onClick={() => setShowList(false)}
           className={({ isActive }) =>
             `px-4 py-3 rounded-lg font-medium transition ${
-              isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-100"
+              isActive ? "bg-blue-50 text-main" : "hover:bg-gray-100"
             }`
           }
         >
@@ -54,7 +54,7 @@ export default function ResponsiveMenu({
           onClick={() => setShowList(false)}
           className={({ isActive }) =>
             `px-4 py-3 rounded-lg font-medium transition ${
-              isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-100"
+              isActive ? "bg-blue-50 text-main" : "hover:bg-gray-100"
             }`
           }
         >
@@ -66,7 +66,7 @@ export default function ResponsiveMenu({
           onClick={() => setShowList(false)}
           className={({ isActive }) =>
             `px-4 py-3 rounded-lg font-medium transition ${
-              isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-100"
+              isActive ? "bg-blue-50 text-main" : "hover:bg-gray-100"
             }`
           }
         >

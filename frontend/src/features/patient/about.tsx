@@ -41,7 +41,7 @@ export default function About() {
           <span className="text-gray-600">choose us</span>
         </h1>
         <div className="flex flex-col md:flex-row justify-center items-center">
-          <div className="flex flex-col space-y-6 border border-gray-200 px-12 py-16 hover:bg-primary transition-all duration-200 group cursor-pointer">
+          <div className="flex flex-col space-y-6 border border-gray-200 px-12 py-16 hover:bg-main transition-all duration-200 group cursor-pointer">
             <h1 className="text-xl font-semibold uppercase text-gray-700 group-hover:text-white">
               efficiency:
             </h1>
@@ -50,7 +50,7 @@ export default function About() {
               <br /> busy lifestyle.
             </p>
           </div>
-          <div className="flex flex-col space-y-6 border border-gray-200 px-12 py-16 hover:bg-primary transition-all duration-200 group cursor-pointer">
+          <div className="flex flex-col space-y-6 border border-gray-200 px-12 py-16 hover:bg-main transition-all duration-200 group cursor-pointer">
             <h1 className="text-xl font-semibold uppercase text-gray-700 group-hover:text-white">
               convenience:
             </h1>
@@ -59,7 +59,7 @@ export default function About() {
               <br /> in your area.
             </p>
           </div>
-          <div className="flex flex-col space-y-6 border border-gray-200 px-12 py-16 hover:bg-primary transition-all duration-200 group cursor-pointer">
+          <div className="flex flex-col space-y-6 border border-gray-200 px-12 py-16 hover:bg-main transition-all duration-200 group cursor-pointer">
             <h1 className="text-xl font-semibold uppercase text-gray-700 group-hover:text-white">
               personalization:
             </h1>

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as adminService from "./adminServices";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
+import { DoctorStatus } from "@prisma/client";
 
 export const getAllDoctors = async (
   req: Request,
@@ -9,10 +10,18 @@ export const getAllDoctors = async (
 ) => {
   try {
     const search = req.query.search as string | undefined;
+    const status = req.query.status as DoctorStatus | undefined;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
 
-    const doctors = await adminService.getAllDoctorsService(search);
+    const result = await adminService.getAllDoctorsService({
+      search: search || undefined,
+      status: status || undefined,
+      page,
+      limit,
+    });
 
-    return res.status(200).json({ success: true, doctors });
+    return res.status(200).json({ success: true, ...result });
   } catch (err) {
     next(err);
   }

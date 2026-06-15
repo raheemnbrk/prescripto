@@ -1,11 +1,11 @@
-import {assets} from "../../assets/assets";
+import { assets } from "../../assets/assets";
 
 import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Hero() {
   return (
     <>
-      <div className="bg-primary px-8 md:px-16 pt-8 md:pt-16 grid grid-cols-1 md:grid-cols-2 gap-6 rounded-md overflow-hidden">
+      <div className="bg-main px-8 md:px-16 pt-8 md:pt-16 grid grid-cols-1 md:grid-cols-2 gap-6 rounded-md overflow-hidden">
         <div className="flex flex-col space-y-6 order-1 pt-16">
           <h1 className="capitalize text-white text-3xl md:text-5xl font-semibold text-center md:text-left">
             book appointment <br /> with trusted <br /> doctors

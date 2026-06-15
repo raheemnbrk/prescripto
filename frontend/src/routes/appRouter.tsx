@@ -12,6 +12,9 @@ import Contact from "@/features/patient/contact";
 import SingleDoctor from "@/features/patient/singleDoctor";
 import ProtectedRoutes from "./protectedRoutes";
 import MyAppointments from "@/features/patient/appointments";
+import RoleRouter from "./roleRoutes";
+import AdminLayout from "@/features/admin/adminLayout";
+import AllDoctors from "@/features/admin/allDoctors";
 
 export default function AppRouter() {
   return (
@@ -31,6 +34,11 @@ export default function AppRouter() {
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route path="/appointments" element={<MyAppointments />} />
+        </Route>
+      </Route>
+      <Route element={<RoleRouter role="ADMIN" />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="doctors" element={<AllDoctors />} />
         </Route>
       </Route>
     </Routes>

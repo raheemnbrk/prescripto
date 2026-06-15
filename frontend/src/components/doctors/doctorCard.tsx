@@ -5,7 +5,7 @@ export default function DoctorCard({ doctor }: { doctor: Doctor }) {
   return (
     <Link
       to={`/doctors/${doctor.userId}`}
-      className="group bg-white border border-primary/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+      className="group bg-white border border-main/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
     >
       <div className="bg-indigo-50 flex items-center justify-center">
         <img

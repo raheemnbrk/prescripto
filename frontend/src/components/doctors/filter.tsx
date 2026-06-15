@@ -68,9 +68,7 @@ export default function Filter() {
                 type="button"
                 onClick={() => handleSelect("")}
                 className={`w-full flex items-center justify-between cursor-pointer px-4 py-2.5 text-left hover:bg-indigo-50 transition-colors ${
-                  !specialization
-                    ? "text-primary font-medium"
-                    : "text-gray-700"
+                  !specialization ? "text-main font-medium" : "text-gray-700"
                 }`}
               >
                 All Specialties
@@ -84,7 +82,7 @@ export default function Filter() {
                   onClick={() => handleSelect(s)}
                   className={`w-full flex items-center cursor-pointer justify-between px-4 py-2.5 text-left hover:bg-indigo-50 transition-colors ${
                     specialization === s
-                      ? "text-primary font-medium"
+                      ? "text-main font-medium"
                       : "text-gray-700"
                   }`}
                 >

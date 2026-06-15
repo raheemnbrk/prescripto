@@ -11,7 +11,7 @@ CREATE TABLE "Appointment" (
     "date" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Appointment_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Appointment_pkey" main KEY ("id")
 );
 
 -- AddForeignKey

@@ -14,7 +14,7 @@ CREATE TABLE "User" (
     "phoneNumber" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" main KEY ("id")
 );
 
 -- CreateTable
@@ -27,7 +27,7 @@ CREATE TABLE "RefreshToken" (
     "replacedBy" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "RefreshToken_pkey" main KEY ("id")
 );
 
 -- CreateIndex

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { PiCodaLogoFill } from "react-icons/pi";
 import { FaAngleDown } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
 import ResponsiveMenu from "./responsiveMenu";
 import { useAuthStore } from "@/store/authStore";
 import { logout } from "@/lib/api/authApi";
 import { toast } from "sonner";
+import { RiHospitalFill } from "react-icons/ri";
 
 export default function NavBar() {
   const [showMenu, setShowMenu] = useState(false);
@@ -35,7 +35,7 @@ export default function NavBar() {
       <div className="max-w-7xl mx-auto pb-4 flex items-center justify-between">
         <Link to="/">
           <div className="flex items-center gap-2">
-            <PiCodaLogoFill className="text-blue-600 text-4xl" />
+            <RiHospitalFill className="text-main text-4xl" />
             <h1 className="text-2xl sm:text-3xl font-bold text-blue-950">
               Prescripto
             </h1>
@@ -48,9 +48,7 @@ export default function NavBar() {
               to="/"
               className={({ isActive }) =>
                 `uppercase text-sm font-semibold pb-1 transition ${
-                  isActive
-                    ? "border-b-2 border-blue-600"
-                    : "hover:text-blue-600"
+                  isActive ? "border-b-2 border-main" : "hover:text-main"
                 }`
               }
             >
@@ -63,9 +61,7 @@ export default function NavBar() {
               to="/doctors"
               className={({ isActive }) =>
                 `uppercase text-sm font-semibold pb-1 transition ${
-                  isActive
-                    ? "border-b-2 border-blue-600"
-                    : "hover:text-blue-600"
+                  isActive ? "border-b-2 border-main" : "hover:text-main"
                 }`
               }
             >
@@ -78,9 +74,7 @@ export default function NavBar() {
               to="/about"
               className={({ isActive }) =>
                 `uppercase text-sm font-semibold pb-1 transition ${
-                  isActive
-                    ? "border-b-2 border-blue-600"
-                    : "hover:text-blue-600"
+                  isActive ? "border-b-2 border-main" : "hover:text-main"
                 }`
               }
             >
@@ -93,9 +87,7 @@ export default function NavBar() {
               to="/contact"
               className={({ isActive }) =>
                 `uppercase text-sm font-semibold pb-1 transition ${
-                  isActive
-                    ? "border-b-2 border-blue-600"
-                    : "hover:text-blue-600"
+                  isActive ? "border-b-2 border-main" : "hover:text-main"
                 }`
               }
             >
@@ -104,7 +96,13 @@ export default function NavBar() {
           </li>
         </ul>
 
-        {/* Right Side */}
+        {user?.role === "ADMIN" && (
+          <Link to={"/admin"}>
+            <p className="px-2 cursor-pointer text-zinc-600 text-sm border border-zinc-600 uppercase font-medium rounded-full">
+              admin
+            </p>
+          </Link>
+        )}
         <div className="flex items-center gap-4">
           {user ? (
             <div className="relative">
@@ -160,14 +158,14 @@ export default function NavBar() {
             </div>
           ) : (
             <Link to="/register">
-              <button className="px-6 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition">
+              <button className="px-6 py-2 rounded-full bg-main text-white hover:bg-blue-700 transition">
                 Create Account
               </button>
             </Link>
           )}
 
           <HiMenuAlt3
-            className="text-3xl text-blue-600 cursor-pointer md:hidden"
+            className="text-3xl text-main cursor-pointer md:hidden"
             onClick={() => setShowList(true)}
           />
         </div>

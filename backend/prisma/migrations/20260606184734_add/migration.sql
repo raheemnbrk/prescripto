@@ -13,7 +13,7 @@ CREATE TABLE "Doctor" (
     "available" BOOLEAN NOT NULL DEFAULT true,
     "status" "DoctorStatus" NOT NULL DEFAULT 'PENDING',
 
-    CONSTRAINT "Doctor_pkey" PRIMARY KEY ("userId")
+    CONSTRAINT "Doctor_pkey" main KEY ("userId")
 );
 
 -- AddForeignKey

@@ -1,25 +1,51 @@
 import prisma from "../../shared/config/prisma";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
+import { DoctorStatus } from "@prisma/client";
 
-export const getAllDoctorsService = async (search?: string) => {
-  const doctors = await prisma.doctor.findMany({
-    where: {
-      ...(search && {
-        OR: [
-          { user: { name: { contains: search, mode: "insensitive" } } },
-          { specialization: { contains: search, mode: "insensitive" } },
-        ],
-      }),
-    },
-    include: { user: { select: { name: true, email: true, image: true } } },
-  });
+export const getAllDoctorsService = async ({
+  search,
+  status,
+  page,
+  limit,
+}: {
+  search?: string;
+  status?: DoctorStatus;
+  page: number;
+  limit: number;
+}) => {
+  const skip = (page - 1) * limit;
 
-  return doctors.map(({ user, ...doctor }) => ({
-    ...doctor,
-    name: user.name,
-    email: user.email,
-    image: user.image,
-  }));
+  const where = {
+    ...(status && { status }),
+    ...(search && {
+      OR: [
+        { user: { name: { contains: search, mode: "insensitive" as const } } },
+        { specialization: { contains: search, mode: "insensitive" as const } },
+      ],
+    }),
+  };
+
+  const [doctors, total] = await Promise.all([
+    prisma.doctor.findMany({
+      where,
+      skip,
+      take: limit,
+      include: { user: { select: { name: true, email: true, image: true } } },
+    }),
+    prisma.doctor.count({ where }),
+  ]);
+
+  return {
+    doctors: doctors.map(({ user, ...doctor }) => ({
+      ...doctor,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+    })),
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const approveDoctorService = async (id: string) => {
