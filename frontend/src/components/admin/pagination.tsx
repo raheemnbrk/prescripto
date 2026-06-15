@@ -22,8 +22,8 @@ export default function AppPagination({
   const [searchParams, setSearchParams] = useSearchParams();
 
   const setPage = (newPage: number) => {
-    const params = Object.fromEntries(searchParams.entries());
-    params[paramName] = String(newPage);
+    const params = new URLSearchParams(searchParams);
+    params.set(paramName, String(newPage));
     setSearchParams(params);
   };
 

@@ -1,4 +1,3 @@
-// DataTable.tsx
 import {
   Table,
   TableBody,

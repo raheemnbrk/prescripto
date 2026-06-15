@@ -86,3 +86,4 @@ export const deleteUser = async (id: string) => {
   if (!existing) throw new ApiErrors(404, "User not found");
   await prisma.user.delete({ where: { id } });
 };
+

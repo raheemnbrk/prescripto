@@ -6,42 +6,39 @@ interface TableSkeletonProps {
 }
 
 export default function TableSkeleton({
-  rows = 3,
+  rows = 5,
   columns = 5,
 }: TableSkeletonProps) {
   return (
-    <div className="rounded-xl border overflow-hidden">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b bg-muted/30">
-            {Array.from({ length: columns }).map((_, i) => (
-              <th key={i} className="p-4">
-                <Skeleton className="h-4 w-20" />
-              </th>
-            ))}
-          </tr>
-        </thead>
+    <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
+      <div className="grid bg-muted/40 p-4 gap-4" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+        {Array.from({ length: columns }).map((_, i) => (
+          <Skeleton key={i} className="h-4 w-24 rounded-md" />
+        ))}
+      </div>
 
-        <tbody>
-          {Array.from({ length: rows }).map((_, row) => (
-            <tr key={row} className="border-b">
-              {Array.from({ length: columns }).map((_, col) => (
-                <td key={col} className="p-4">
-                  <Skeleton
-                    className={`h-4 ${
-                      col === 0
-                        ? "w-32"
-                        : col === columns - 1
-                          ? "w-20"
-                          : "w-full"
-                    }`}
-                  />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="divide-slate-100 divide-y">
+        {Array.from({ length: rows }).map((_, row) => (
+          <div
+            key={row}
+            className="grid p-4 gap-4 items-center"
+            style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+          >
+            {Array.from({ length: columns }).map((_, col) => (
+              <Skeleton
+                key={col}
+                className={`h-4 rounded-md ${
+                  col === 0
+                    ? "w-32"
+                    : col === columns - 1
+                    ? "w-20"
+                    : "w-full"
+                }`}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

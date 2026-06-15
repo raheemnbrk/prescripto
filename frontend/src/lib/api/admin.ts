@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../axios";
 
 export const getAllDoctors = async ({
   page,
@@ -9,7 +9,7 @@ export const getAllDoctors = async ({
   status: string;
   search: string;
 }) => {
-  const res = await axios.get("/admin/all-doctors", {
+  const res = await api.get("/admin/all-doctors", {
     params: {
       page,
       search: search || undefined,
@@ -17,5 +17,15 @@ export const getAllDoctors = async ({
     },
   });
 
+  return res.data;
+};
+
+export const approveDoctor = async (id: string) => {
+  const res = await api.post(`/admin/approve/${id}`);
+  return res.data;
+};
+
+export const rejectDoctor = async (id: string) => {
+  const res = await api.post(`/admin/reject/${id}`);
   return res.data;
 };

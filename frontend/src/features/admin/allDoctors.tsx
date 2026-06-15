@@ -5,6 +5,10 @@ import TableSkeleton from "@/components/loading/tableSkeleton";
 import { DataTable } from "@/components/admin/table";
 import AppPagination from "@/components/admin/pagination";
 import { useAllDoctors } from "@/hooks/useAdmin";
+import type { Doctor } from "@/types/doctorType";
+import { FaCheck } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { useApproveDoctor, useRejectDoctor } from "@/hooks/useAdmin";
 
 export default function AllDoctors() {
   const [searchParams] = useSearchParams();
@@ -19,7 +23,53 @@ export default function AllDoctors() {
     status,
   });
 
-  console.log(data);
+  const approveDoctor = useApproveDoctor();
+  const rejectDoctor = useRejectDoctor();
+
+  const columns = [
+    {
+      label: "Image",
+      key: "image",
+      render: (row: Doctor) => (
+        <div className="rounded-full w-fit bg-main/10">
+          <img
+            src={(row as Doctor).image}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        </div>
+      ),
+    },
+    { label: "Name", key: "name" },
+    { label: "Specialization", key: "specialization" },
+    { label: "Fees", key: "fees" },
+    { label: "Degree", key: "degree" },
+    { label: "Status", key: "status" },
+    {
+      label: "Action",
+      key: "action",
+      render: (row: Doctor) =>
+        row.status === "APPROVED" || row.status === "REJECTED" ? (
+          <p>{"_"}</p>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              className="p-2 rounded-full bg-red-200 cursor-pointer"
+              onClick={() => rejectDoctor.mutate(row.userId)}
+              disabled={rejectDoctor.isPending}
+            >
+              <IoClose className="text-red-600" />
+            </button>
+            <button
+              className="p-2 rounded-full bg-green-200 cursor-pointer"
+              onClick={() => approveDoctor.mutate(row.userId)}
+              disabled={approveDoctor.isPending}
+            >
+              <FaCheck className="text-green-600" />
+            </button>
+          </div>
+        ),
+    },
+  ];
 
   return (
     <div className="space-y-5">
@@ -30,15 +80,7 @@ export default function AllDoctors() {
       {isLoading ? (
         <TableSkeleton rows={6} columns={4} />
       ) : (
-        <DataTable
-          data={data?.doctors || []}
-          columns={[
-            { label: "Name", key: "name" },
-            { label: "Specialization", key: "specialization" },
-            { label: "Fees", key: "fees" },
-            { label: "Status", key: "status" },
-          ]}
-        />
+        <DataTable data={data?.doctors || []} columns={columns} />
       )}
 
       <AppPagination page={page} totalPages={data?.totalPages || 1} />

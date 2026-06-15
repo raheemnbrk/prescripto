@@ -158,7 +158,7 @@ export default function NavBar() {
             </div>
           ) : (
             <Link to="/register">
-              <button className="px-6 py-2 rounded-full bg-main text-white hover:bg-blue-700 transition">
+              <button className="px-6 py-2 rounded-full bg-main text-white hover:bg-main/90 cursor-pointer transition">
                 Create Account
               </button>
             </Link>

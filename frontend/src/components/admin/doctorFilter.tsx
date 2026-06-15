@@ -32,7 +32,7 @@ export default function DoctorsFilters() {
           placeholder="Search by name or specialization..."
           value={search}
           onChange={(e) => updateParams("search", e.target.value)}
-          className="pl-9 border-indigo-200 focus-visible:ring-indigo-500 rounded-xl"
+          className="pl-9 border-indigo-200 focus-visible:ring-indigo-500 rounded-md py-5"
         />
       </div>
 
@@ -40,14 +40,14 @@ export default function DoctorsFilters() {
         value={status}
         onValueChange={(value) => updateParams("status", value)}
       >
-        <SelectTrigger className="w-full md:w-48 border-indigo-200 focus:ring-indigo-500 rounded-xl">
+        <SelectTrigger className="w-full md:w-48 border-indigo-200 focus:ring-indigo-500 cursor-pointer py-5 rounded-md">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">All Statuses</SelectItem>
-          <SelectItem value="PENDING">Pending</SelectItem>
-          <SelectItem value="APPROVED">Approved</SelectItem>
-          <SelectItem value="REJECTED">Rejected</SelectItem>
+        <SelectContent sideOffset={8}>
+          <SelectItem value="ALL" className="cursor-pointer">All Statuses</SelectItem>
+          <SelectItem value="PENDING" className="cursor-pointer">Pending</SelectItem>
+          <SelectItem value="APPROVED" className="cursor-pointer">Approved</SelectItem>
+          <SelectItem value="REJECTED" className="cursor-pointer">Rejected</SelectItem>
         </SelectContent>
       </Select>
     </div>
