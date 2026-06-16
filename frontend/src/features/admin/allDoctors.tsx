@@ -9,9 +9,10 @@ import type { Doctor } from "@/types/doctorType";
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { useApproveDoctor, useRejectDoctor } from "@/hooks/useAdmin";
+import { useEffect } from "react";
 
 export default function AllDoctors() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const page = Number(searchParams.get("page") || 1);
   const search = searchParams.get("search") || "";
@@ -71,6 +72,11 @@ export default function AllDoctors() {
     },
   ];
 
+  useEffect(() => {
+    if (!searchParams.get("page")) {
+      setSearchParams({ page: "1" }, { replace: true });
+    }
+  }, []);
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold">All Doctors</h1>

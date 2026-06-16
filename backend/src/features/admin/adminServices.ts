@@ -68,17 +68,31 @@ export const rejectDoctorService = async (id: string) => {
   });
 };
 
-export const getAllUsers = async (search?: string) => {
-  const users = await prisma.user.findMany({
-    where: {
-      ...(search && {
-        OR: [{ name: { contains: search, mode: "insensitive" } }],
-      }),
-    },
-    omit: { password: true },
-  });
+export const getAllUsers = async ({
+  search,
+  limit,
+  page,
+}: {
+  search?: string;
+  limit: number;
+  page: number;
+}) => {
+  const skip = (page - 1) * limit;
+  const where = {
+    ...(search && { name: { contains: search, mode: "insensitive" as const } }),
+  };
 
-  return users;
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      skip,
+      take: limit,
+      omit: { password: true },
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  return { users, total, page, totalPage: Math.ceil(total / page) };
 };
 
 export const deleteUser = async (id: string) => {
@@ -86,4 +100,3 @@ export const deleteUser = async (id: string) => {
   if (!existing) throw new ApiErrors(404, "User not found");
   await prisma.user.delete({ where: { id } });
 };
-

@@ -16,7 +16,7 @@ export default function SideBar() {
     { name: "Appointments", path: "appointments", icon: <FaBusinessTime /> },
   ];
   return (
-    <div className="md:w-64 w-16 border-r h-screen text-base border-gray-300 flex flex-col transition-all duration-300 pt-4">
+    <div className="md:w-64 w-16 border-r min-h-screen text-base border-gray-300 flex flex-col transition-all duration-300 pt-4">
       {sidebarLinks.map((item, index) => (
         <NavLink
           to={item.path}

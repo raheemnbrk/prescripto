@@ -40,7 +40,7 @@ export default function DoctorsFilters() {
         value={status}
         onValueChange={(value) => updateParams("status", value)}
       >
-        <SelectTrigger className="w-full md:w-48 border-indigo-200 focus:ring-indigo-500 cursor-pointer py-5 rounded-md">
+        <SelectTrigger className="w-full md:w-48 border-indigo-200 focus:ring-main/30 cursor-pointer py-5 rounded-md">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent sideOffset={8}>

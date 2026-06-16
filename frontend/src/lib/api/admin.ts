@@ -29,3 +29,18 @@ export const rejectDoctor = async (id: string) => {
   const res = await api.post(`/admin/reject/${id}`);
   return res.data;
 };
+
+export const getALlUsers = async ({
+  search,
+  limit,
+  page,
+}: {
+  search?: string;
+  limit: number;
+  page: number;
+}) => {
+  const res = await api.get("/admin/all-users", {
+    params: { search: search || undefined, limit, page },
+  });
+  return res.data;
+};

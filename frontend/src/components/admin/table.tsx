@@ -27,7 +27,7 @@ export function DataTable<T>({
   emptyText = "No data found",
 }: Props<T>) {
   return (
-    <div className="bg-white border border-indigo-100 rounded-2xl overflow-hidden">
+    <div className="bg-white border border-indigo-100 rounded-md overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="bg-indigo-50 hover:bg-indigo-50 border-b border-indigo-100">

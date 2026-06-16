@@ -1,8 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DoctorsResponse } from "@/types/doctorType";
-import api from "@/lib/axios";
-import { approveDoctor, rejectDoctor } from "@/lib/api/admin";
+import {
+  approveDoctor,
+  getAllDoctors,
+  getALlUsers,
+  rejectDoctor,
+} from "@/lib/api/admin";
 import { toast } from "sonner";
+import type { UsersResponse } from "@/types/admin";
 
 export const useAllDoctors = ({
   page,
@@ -15,16 +20,7 @@ export const useAllDoctors = ({
 }) =>
   useQuery<DoctorsResponse>({
     queryKey: ["admin-doctors", page, status, search],
-    queryFn: async () => {
-      const res = await api.get("/admin/all-doctors", {
-        params: {
-          page,
-          status: status || undefined,
-          search: search || undefined,
-        },
-      });
-      return res.data;
-    },
+    queryFn: () => getAllDoctors({ page, status, search }),
   });
 
 export const useApproveDoctor = () => {
@@ -64,3 +60,17 @@ export const useRejectDoctor = () => {
     },
   });
 };
+
+export const useAllUsers = ({
+  search,
+  limit,
+  page,
+}: {
+  search?: string;
+  limit: number;
+  page: number;
+}) =>
+  useQuery<UsersResponse>({
+    queryKey: ["admin-users", search, limit, page],
+    queryFn: () => getALlUsers({ search, limit, page }),
+  });

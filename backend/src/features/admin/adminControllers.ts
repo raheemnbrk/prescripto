@@ -70,9 +70,11 @@ export const getAllUsers = async (
 ) => {
   try {
     const search = req.query.search as string | undefined;
-    const users = await adminService.getAllUsers(search);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const result = await adminService.getAllUsers({ search, limit, page });
 
-    res.status(200).json({ success: true, users });
+    res.status(200).json({ success: true, ...result });
   } catch (err) {
     next(err);
   }

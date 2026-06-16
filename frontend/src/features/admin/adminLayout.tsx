@@ -3,12 +3,11 @@ import TopBar from "@/components/admin/topBar";
 import { Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
-
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      <SideBar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <TopBar />
+    <div className="h-screen flex flex-col bg-gray-50">
+      <TopBar />
+      <div className="flex flex-1 overflow-hidden">
+        <SideBar />
         <main className="flex-1 p-6 overflow-y-auto">
           <Outlet />
         </main>

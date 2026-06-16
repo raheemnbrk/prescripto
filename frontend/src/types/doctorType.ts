@@ -22,8 +22,5 @@ export interface DoctorsResponse {
   doctors: Doctor[];
   total: number;
   page: number;
-  limit: number;
   totalPages: number;
-  hasNext: boolean;
-  hasPrev: boolean;
 }
