@@ -2,7 +2,7 @@ import AppPagination from "@/components/admin/pagination";
 import { Input } from "../../../@/components/ui/input";
 import { FiSearch } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
-import { useAllUsers } from "@/hooks/useAdmin";
+import { useAllUsers, useDeleteUser } from "@/hooks/useAdmin";
 import TableSkeleton from "@/components/loading/tableSkeleton";
 import { DataTable } from "@/components/admin/table";
 import type { User } from "@/types/authTypes";
@@ -15,6 +15,7 @@ export default function Users() {
   const page = Number(searchParams.get("page") || "1");
 
   const { data, isLoading } = useAllUsers({ search, limit: 10, page });
+  const deleteUser = useDeleteUser();
 
   const updateParams = (key: string, value: string) => {
     const params: any = Object.fromEntries(searchParams.entries());
@@ -47,8 +48,12 @@ export default function Users() {
     {
       label: "Action",
       key: "action",
-      render: () => (
-        <button className="p-2 rounded-full bg-red-100 cursor-pointer">
+      render: (row: User) => (
+        <button
+          className="p-2 rounded-full bg-red-100 cursor-pointer"
+          onClick={() => deleteUser.mutate(row.id)}
+          disabled={deleteUser.isPending}
+        >
           <FaTrash className="text-red-500" />
         </button>
       ),

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DoctorsResponse } from "@/types/doctorType";
 import {
   approveDoctor,
+  deleteUser,
   getAllDoctors,
   getALlUsers,
   rejectDoctor,
@@ -74,3 +75,21 @@ export const useAllUsers = ({
     queryKey: ["admin-users", search, limit, page],
     queryFn: () => getALlUsers({ search, limit, page }),
   });
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteUser(id),
+    onSuccess: () => {
+      toast.success("User deleted successfully.");
+
+      queryClient.invalidateQueries({
+        queryKey: ["admin-users"],
+      });
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message ?? "Something went wrong.");
+    },
+  });
+};

@@ -44,3 +44,8 @@ export const getALlUsers = async ({
   });
   return res.data;
 };
+
+export const deleteUser = async (id: string) => {
+  const res = await api.delete(`/admin/delete/${id}`);
+  return res.data;
+};
