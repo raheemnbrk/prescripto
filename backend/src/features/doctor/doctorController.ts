@@ -151,3 +151,13 @@ export const getRelatedDoctorsController = async (
 
   res.status(200).json({ success: true, doctors });
 };
+
+export const getTopDoctors = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const limit = Number(req.query.limit) || 4;
+    const doctors = await doctorService.getTopDoctorsService(limit);
+    res.status(200).json({ success: true, doctors });
+  } catch (err) {
+    next(err);
+  }
+};

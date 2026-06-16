@@ -33,3 +33,8 @@ export const getRelatedDoctors = async (
   });
   return res.data.doctors;
 };
+
+export const getTopDoctors = async (limit = 4): Promise<Doctor[]> => {
+  const res = await api.get("/doctor/top", { params: { limit } });
+  return res.data.doctors;
+};

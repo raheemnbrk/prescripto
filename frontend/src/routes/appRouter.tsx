@@ -16,6 +16,7 @@ import RoleRouter from "./roleRoutes";
 import AdminLayout from "@/features/admin/adminLayout";
 import AllDoctors from "@/features/admin/allDoctors";
 import Users from "@/features/admin/users";
+import Appointments from "@/features/admin/appointments";
 
 export default function AppRouter() {
   return (
@@ -41,6 +42,7 @@ export default function AppRouter() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="users" element={<Users />} />
           <Route path="doctors" element={<AllDoctors />} />
+          <Route path="appointments" element={<Appointments />} />
         </Route>
       </Route>
     </Routes>

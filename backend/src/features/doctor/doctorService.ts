@@ -198,3 +198,23 @@ export const getRelatedDoctorsService = async (
 
   return doctors.map(({ user, ...rest }) => ({ ...rest, ...user }));
 };
+
+export const getTopDoctorsService = async (limit: number = 4) => {
+  const doctors = await prisma.doctor.findMany({
+    where: { status: "APPROVED", available: true },
+    include: {
+      user: { omit: { password: true } },
+      _count: { select: { appointments: true } },
+    },
+    orderBy: {
+      appointments: { _count: "desc" },
+    },
+    take: limit,
+  });
+
+  return doctors.map(({ user, _count, ...doctor }) => ({
+    ...doctor,
+    ...user,
+    appointmentCount: _count.appointments,
+  }));
+};

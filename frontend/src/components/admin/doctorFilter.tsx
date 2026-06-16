@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "../../../@/components/ui/select";
 import { useSearchParams } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiX } from "react-icons/fi";
 
 export default function DoctorsFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,6 +20,13 @@ export default function DoctorsFilters() {
     const params: any = Object.fromEntries(searchParams.entries());
     if (value === "" || value === "ALL") delete params[key];
     else params[key] = value;
+    params.page = "1";
+    setSearchParams(params);
+  };
+
+  const clearSearch = () => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.search;
     params.page = "1";
     setSearchParams(params);
   };
@@ -44,12 +51,29 @@ export default function DoctorsFilters() {
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent sideOffset={8}>
-          <SelectItem value="ALL" className="cursor-pointer">All Statuses</SelectItem>
-          <SelectItem value="PENDING" className="cursor-pointer">Pending</SelectItem>
-          <SelectItem value="APPROVED" className="cursor-pointer">Approved</SelectItem>
-          <SelectItem value="REJECTED" className="cursor-pointer">Rejected</SelectItem>
+          <SelectItem value="ALL" className="cursor-pointer">
+            All Statuses
+          </SelectItem>
+          <SelectItem value="PENDING" className="cursor-pointer">
+            Pending
+          </SelectItem>
+          <SelectItem value="APPROVED" className="cursor-pointer">
+            Approved
+          </SelectItem>
+          <SelectItem value="REJECTED" className="cursor-pointer">
+            Rejected
+          </SelectItem>
         </SelectContent>
       </Select>
+      {search && (
+        <button
+          onClick={clearSearch}
+          className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-200 px-3 py-2.5 rounded-md transition-all cursor-pointer shrink-0"
+        >
+          <FiX className="w-4 h-4" />
+          Clear
+        </button>
+      )}
     </div>
   );
 }

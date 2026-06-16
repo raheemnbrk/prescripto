@@ -1,6 +1,6 @@
 import AppPagination from "@/components/admin/pagination";
 import { Input } from "../../../@/components/ui/input";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiX } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
 import { useAllUsers, useDeleteUser } from "@/hooks/useAdmin";
 import TableSkeleton from "@/components/loading/tableSkeleton";
@@ -21,6 +21,13 @@ export default function Users() {
     const params: any = Object.fromEntries(searchParams.entries());
     if (value === "" || value === "ALL") delete params[key];
     else params[key] = value;
+    params.page = "1";
+    setSearchParams(params);
+  };
+
+  const clearSearch = () => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.search;
     params.page = "1";
     setSearchParams(params);
   };
@@ -69,17 +76,29 @@ export default function Users() {
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold">All Users</h1>
-      <div className="bg-white border border-indigo-100 rounded-2xl p-4 flex flex-col md:flex-row gap-3">
-        <div className="relative flex-1">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400 w-4 h-4" />
-          <Input
-            placeholder="Search by name or specialization..."
-            value={search}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              updateParams("search", e.target.value)
-            }
-            className="pl-9 border-indigo-200 focus-visible:ring-indigo-500 rounded-md py-5"
-          />
+      <div className="bg-white border border-indigo-100 rounded-2xl p-4">
+        <div className="flex items-center gap-3 w-full">
+          <div className="relative flex-1 min-w-0">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400 w-4 h-4" />
+            <Input
+              placeholder="Search by name or specialization..."
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateParams("search", e.target.value)
+              }
+              className="w-full pl-9 border-indigo-200 focus-visible:ring-indigo-500 rounded-md py-5"
+            />
+          </div>
+
+          {search && (
+            <button
+              onClick={clearSearch}
+              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-200 px-3 py-2.5 rounded-md transition-all cursor-pointer shrink-0"
+            >
+              <FiX className="w-4 h-4" />
+              Clear
+            </button>
+          )}
         </div>
       </div>
       {isLoading ? (

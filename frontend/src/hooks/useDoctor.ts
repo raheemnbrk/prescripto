@@ -4,6 +4,7 @@ import {
   getAllSpecializations,
   getRelatedDoctors,
   getSingleDoctor,
+  getTopDoctors,
 } from "../lib/api/doctorApi";
 
 export const useDoctors = (search?: string, filter?: string) => {
@@ -34,3 +35,10 @@ export const useRelatedDoctors = (id: string, specialization: string) => {
     queryFn: () => getRelatedDoctors(id, specialization),
   });
 };
+
+export const useTopDoctors = (limit = 4) =>
+  useQuery({
+    queryKey: ["top-doctors", limit],
+    queryFn: () => getTopDoctors(limit),
+    staleTime: 1000 * 60 * 60,
+  });
