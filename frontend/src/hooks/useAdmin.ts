@@ -3,12 +3,14 @@ import type { DoctorsResponse } from "@/types/doctorType";
 import {
   approveDoctor,
   deleteUser,
+  getAllAppointments,
   getAllDoctors,
   getALlUsers,
   rejectDoctor,
 } from "@/lib/api/admin";
 import { toast } from "sonner";
 import type { UsersResponse } from "@/types/admin";
+import type { AppointmentFilters, appointmentRes } from "@/types/appointments";
 
 export const useAllDoctors = ({
   page,
@@ -91,5 +93,21 @@ export const useDeleteUser = () => {
     onError: (err: any) => {
       toast.error(err.response?.data?.message ?? "Something went wrong.");
     },
+  });
+};
+
+export const useAdminAppointments = (filters: AppointmentFilters) => {
+  const { page, search, searchBy, status, range } = filters;
+
+  return useQuery<appointmentRes>({
+    queryKey: [
+      "admin-appointments",
+      page,
+      search ?? "",
+      searchBy ?? "",
+      status ?? "",
+      range ?? "",
+    ],
+    queryFn: () => getAllAppointments(filters),
   });
 };

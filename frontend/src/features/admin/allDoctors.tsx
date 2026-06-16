@@ -86,10 +86,11 @@ export default function AllDoctors() {
       {isLoading ? (
         <TableSkeleton rows={6} columns={4} />
       ) : (
-        <DataTable data={data?.doctors || []} columns={columns} />
+        <div className="flex flex-col space-y-3" >
+          <DataTable data={data?.doctors || []} columns={columns} />
+          <AppPagination page={page} totalPages={data?.totalPages || 1} />
+        </div>
       )}
-
-      <AppPagination page={page} totalPages={data?.totalPages || 1} />
     </div>
   );
 }

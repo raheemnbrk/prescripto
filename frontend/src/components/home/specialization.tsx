@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Specialization() {
   return (
     <>
-      <div id="specialization" className="space-y-4">
+      <div id="Specialization" className="space-y-4">
         <h1 className="text-2xl font-semibold text-center capitalize">
           find by specialization
         </h1>

@@ -1,3 +1,4 @@
+import type { AppointmentFilters } from "@/types/appointments";
 import api from "../axios";
 
 export const getAllDoctors = async ({
@@ -47,5 +48,10 @@ export const getALlUsers = async ({
 
 export const deleteUser = async (id: string) => {
   const res = await api.delete(`/admin/delete/${id}`);
+  return res.data;
+};
+
+export const getAllAppointments = async (filters: AppointmentFilters) => {
+  const res = await api.get("/appointments/admin/all", { params: filters });
   return res.data;
 };

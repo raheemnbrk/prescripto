@@ -22,7 +22,7 @@ export default function Hero() {
           </div>
           <div className="flex justify-center md:justify-start capitalize">
             <button className="bg-stone-100 text-gray-600 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer">
-              <a className="flex items-center gap-4 px-6 py-2" href="#">
+              <a className="flex items-center gap-4 px-6 py-2" href="#Specialization">
                 <p>book appointment</p>
                 <FaArrowRightLong />
               </a>
