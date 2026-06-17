@@ -26,3 +26,18 @@ export const getDoctorAppointments = async (params: {
   const res = await api.get("/appointments/doctor/all", { params });
   return res.data;
 };
+
+export const doctorCancelAppointments = async (id: string) => {
+  const res = await api.post(`/appointments/doctor/cancel/${id}`);
+  return res.data;
+};
+
+export const doctorConfirmAppointments = async (id: string) => {
+  const res = await api.post(`/appointments/doctor/confirm/${id}`);
+  return res.data;
+};
+
+export const doctorCompleteAppointments = async (id: string) => {
+  const res = await api.post(`/appointments/doctor/complete/${id}`);
+  return res.data;
+};

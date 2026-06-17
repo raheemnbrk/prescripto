@@ -5,6 +5,9 @@ import { generateSlots } from "@/utils/generateSlot";
 import {
   bookAppointment,
   cancelAppointment,
+  doctorCancelAppointments,
+  doctorCompleteAppointments,
+  doctorConfirmAppointments,
   getDoctorAppointments,
   getPatientAppointments,
 } from "@/lib/api/appointmentsApi";
@@ -78,3 +81,57 @@ export const useDoctorAppointments = (params: {
     queryKey: ["doctor-appointments", params],
     queryFn: () => getDoctorAppointments(params),
   });
+
+export const useDoctorCancelAppointment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => doctorCancelAppointments(id),
+    onSuccess: () => {
+      toast.success("Appointment cancelled.");
+
+      queryClient.invalidateQueries({
+        queryKey: ["doctor-appointments"],
+      });
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message ?? "Something went wrong.");
+    },
+  });
+};
+
+export const useDoctorConfirmAppointment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => doctorConfirmAppointments(id),
+    onSuccess: () => {
+      toast.success("Appointment confirmed.");
+
+      queryClient.invalidateQueries({
+        queryKey: ["doctor-appointments"],
+      });
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message ?? "Something went wrong.");
+    },
+  });
+};
+
+export const useDoctorCompleteAppointment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => doctorCompleteAppointments(id),
+    onSuccess: () => {
+      toast.success("Appointment completed.");
+
+      queryClient.invalidateQueries({
+        queryKey: ["doctor-appointments"],
+      });
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message ?? "Something went wrong.");
+    },
+  });
+};

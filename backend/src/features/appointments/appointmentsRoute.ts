@@ -49,4 +49,11 @@ aptRouter.post(
   confirmAppointment,
 );
 
+aptRouter.post(
+  "/doctor/cancel/:id",
+  authenticate,
+  authorizeDoctor,
+  cancelAppointment,
+);
+
 export default aptRouter;

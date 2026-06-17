@@ -3,7 +3,12 @@ import { DataTable } from "@/components/admin/table";
 import AppointmentFilters from "@/components/doctors/appointmentsFilter";
 import { DatePickerInput } from "@/components/layout/datePicker";
 import TableSkeleton from "@/components/loading/tableSkeleton";
-import { useDoctorAppointments } from "@/hooks/useAppointment";
+import {
+  useDoctorAppointments,
+  useDoctorCancelAppointment,
+  useDoctorCompleteAppointment,
+  useDoctorConfirmAppointment,
+} from "@/hooks/useAppointment";
 import type { DoctorAppointment } from "@/types/doctorType";
 import { useEffect } from "react";
 import { FaCheck } from "react-icons/fa6";
@@ -30,6 +35,10 @@ export default function DoctorAppointments() {
     page,
     limit: 10,
   });
+
+  const cancelAppointment = useDoctorCancelAppointment();
+  const confirmAppointment = useDoctorConfirmAppointment();
+  const completeAppointment = useDoctorCompleteAppointment();
 
   const columns = [
     {
@@ -74,16 +83,27 @@ export default function DoctorAppointments() {
       render: (row: DoctorAppointment) =>
         row.status === "PENDING" ? (
           <div className="flex items-center gap-2">
-            <button className="p-2 rounded-full bg-red-100 cursor-pointer">
+            <button
+              className="p-2 rounded-full bg-red-100 cursor-pointer"
+              onClick={() => cancelAppointment.mutate(row.id)}
+              disabled={cancelAppointment.isPending}
+            >
               <IoClose className="text-red-600" />
             </button>
-            <button className="p-2 rounded-full bg-green-100 cursor-pointer">
+            <button
+              className="p-2 rounded-full bg-green-100 cursor-pointer"
+              onClick={() => confirmAppointment.mutate(row.id)}
+              disabled={confirmAppointment.isPending}
+            >
               <FaCheck className="text-green-600" />
             </button>
           </div>
         ) : row.status === "CONFIRMED" ? (
-          <button>
-            <GrCompliance />{" "}
+          <button
+            className="p-2 rounded-full bg-green-100 cursor-pointer"
+            onClick={() => completeAppointment.mutate(row.id)}
+          >
+            <GrCompliance className="text-green-600"  />{" "}
           </button>
         ) : (
           <p>{"_"}</p>
