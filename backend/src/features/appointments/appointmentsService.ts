@@ -136,18 +136,26 @@ export const getAllAppointmentsService = async (
 ) => {
   const { search, searchBy, date, status } = filters;
 
-  const start = date ? new Date(new Date(date).setHours(0, 0, 0, 0)) : undefined;
-  const end = date ? new Date(new Date(date).setHours(23, 59, 59, 999)) : undefined;
+  const start = date
+    ? new Date(new Date(date).setHours(0, 0, 0, 0))
+    : undefined;
+  const end = date
+    ? new Date(new Date(date).setHours(23, 59, 59, 999))
+    : undefined;
 
   const skip = (page - 1) * limit;
 
   const where = {
-    ...(search && searchBy === "doctor" && {
-      doctor: { user: { name: { contains: search, mode: "insensitive" as const } } },
-    }),
-    ...(search && searchBy === "user" && {
-      user: { name: { contains: search, mode: "insensitive" as const } },
-    }),
+    ...(search &&
+      searchBy === "doctor" && {
+        doctor: {
+          user: { name: { contains: search, mode: "insensitive" as const } },
+        },
+      }),
+    ...(search &&
+      searchBy === "user" && {
+        user: { name: { contains: search, mode: "insensitive" as const } },
+      }),
     ...(status && { status }),
     ...(date && { date: { gte: start, lte: end } }),
   };
@@ -202,59 +210,66 @@ export const adminCancelAppointments = async (id: string) => {
 export const getDoctorAppointments = async (
   docId: string,
   filters: appointmentFilterInput,
+  page: number,
+  limit: number,
 ) => {
-  const { search, date, status, range } = filters;
+  const { search, date, status } = filters;
 
-  const getDateRange = () => {
-    if (range === "all" || !range || !date) return undefined;
+  const dateFilter = date
+    ? {
+        gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
+        lte: new Date(new Date(date).setHours(23, 59, 59, 999)),
+      }
+    : undefined;
 
-    const target = new Date(date);
-    const endOfDay = new Date(target);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    switch (range) {
-      case "last7days": {
-        return {
-          gte: new Date(target.getTime() - 7 * 24 * 60 * 60 * 1000),
-          lte: endOfDay,
-        };
-      }
-      case "last30days": {
-        return {
-          gte: new Date(target.getTime() - 30 * 24 * 60 * 60 * 1000),
-          lte: endOfDay,
-        };
-      }
-      case "last12months": {
-        return {
-          gte: new Date(
-            target.getFullYear() - 1,
-            target.getMonth(),
-            target.getDate(),
-          ),
-          lte: endOfDay,
-        };
-      }
-      default:
-        return undefined;
-    }
+  const where = {
+    docId,
+    ...(search && {
+      user: {
+        name: {
+          contains: search,
+          mode: "insensitive" as const,
+        },
+      },
+    }),
+    ...(status && { status }),
+    ...(dateFilter && { date: dateFilter }),
   };
 
-  const dateFilter = getDateRange();
+  const skip = (page - 1) * limit;
 
-  const appointments = await prisma.appointment.findMany({
-    where: {
-      docId,
-      ...(search && {
-        user: { name: { contains: search, mode: "insensitive" } },
-      }),
-      ...(status && { status: status }),
-      ...(dateFilter && { date: dateFilter }),
-    },
-    orderBy: { date: "asc" },
-  });
+  const [appointments, total] = await Promise.all([
+    prisma.appointment.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { date: "asc" },
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+            phoneNumber: true,
+            email: true,
+          },
+        },
+      },
+    }),
+    prisma.appointment.count({ where }),
+  ]);
 
-  return appointments;
+  return {
+    appointments: appointments.map(({ user, ...apt }) => ({
+      ...apt,
+      patientName: user.name,
+      patientImage: user.image,
+      patientPhone: user.phoneNumber,
+      email: user.email,
+    })),
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const doctorCancelAppointment = async (docId: string, id: string) => {

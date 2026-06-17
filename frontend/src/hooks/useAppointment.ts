@@ -5,6 +5,7 @@ import { generateSlots } from "@/utils/generateSlot";
 import {
   bookAppointment,
   cancelAppointment,
+  getDoctorAppointments,
   getPatientAppointments,
 } from "@/lib/api/appointmentsApi";
 
@@ -65,3 +66,15 @@ export const useCancelAppointment = () => {
     },
   });
 };
+
+export const useDoctorAppointments = (params: {
+  search?: string;
+  date?: string;
+  status?: string;
+  page: number;
+  limit?: number;
+}) =>
+  useQuery({
+    queryKey: ["doctor-appointments", params],
+    queryFn: () => getDoctorAppointments(params),
+  });

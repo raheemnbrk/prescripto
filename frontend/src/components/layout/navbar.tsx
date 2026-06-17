@@ -103,6 +103,13 @@ export default function NavBar() {
             </p>
           </Link>
         )}
+        {user?.role === "DOCTOR" && (
+          <Link to={"/doctor"}>
+            <p className="px-2 cursor-pointer text-zinc-600 text-sm border border-zinc-600 uppercase font-medium rounded-full">
+              doctor
+            </p>
+          </Link>
+        )}
         <div className="flex items-center gap-4">
           {user ? (
             <div className="relative">

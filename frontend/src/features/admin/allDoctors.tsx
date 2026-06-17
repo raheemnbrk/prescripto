@@ -54,14 +54,14 @@ export default function AllDoctors() {
         ) : (
           <div className="flex items-center gap-2">
             <button
-              className="p-2 rounded-full bg-red-200 cursor-pointer"
+              className="p-2 rounded-full bg-red-100 cursor-pointer"
               onClick={() => rejectDoctor.mutate(row.userId)}
               disabled={rejectDoctor.isPending}
             >
               <IoClose className="text-red-600" />
             </button>
             <button
-              className="p-2 rounded-full bg-green-200 cursor-pointer"
+              className="p-2 rounded-full bg-green-100 cursor-pointer"
               onClick={() => approveDoctor.mutate(row.userId)}
               disabled={approveDoctor.isPending}
             >

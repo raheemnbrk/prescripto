@@ -24,3 +24,21 @@ export interface DoctorsResponse {
   page: number;
   totalPages: number;
 }
+
+export interface DoctorAppointment {
+  id: string;
+  docId: string;
+  userId: string;
+
+  patientName: string;
+  patientImage: string;
+  patientPhone: string | null;
+  email: string;
+
+  date: string;
+  status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+
+  fees: number;
+
+  createdAt: string;
+}
