@@ -117,8 +117,6 @@ export default function DoctorAppointments() {
       setSearchParams({ page: today }, { replace: true });
     }
   }, []);
-
-  console.log(data?.appointments);
   return (
     <div className="flex flex-col space-y-5">
       <DatePickerInput

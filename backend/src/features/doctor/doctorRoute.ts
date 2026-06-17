@@ -5,6 +5,7 @@ import {
   getAllDoctors,
   getAllSpecializationController,
   getDoctorByID,
+  getDoctorPatients,
   getDoctorProfile,
   getRelatedDoctorsController,
   getTopDoctors,
@@ -34,6 +35,7 @@ doctorRouter.post(
 );
 doctorRouter.get("/specializations", getAllSpecializationController);
 doctorRouter.get("/top", getTopDoctors);
+doctorRouter.get("/patients", authenticate, authorizeDoctor, getDoctorPatients);
 doctorRouter.get("/:id", getDoctorByID);
 doctorRouter.get("/:id/related", getRelatedDoctorsController);
 export default doctorRouter;

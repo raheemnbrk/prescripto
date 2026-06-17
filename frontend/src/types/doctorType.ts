@@ -42,3 +42,10 @@ export interface DoctorAppointment {
 
   createdAt: string;
 }
+
+export interface PatientsResponse {
+  patients: User[];
+  total: number;
+  page: number;
+  totalPages: number;
+}

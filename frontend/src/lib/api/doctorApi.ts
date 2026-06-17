@@ -38,3 +38,12 @@ export const getTopDoctors = async (limit = 4): Promise<Doctor[]> => {
   const res = await api.get("/doctor/top", { params: { limit } });
   return res.data.doctors;
 };
+
+export const getDoctorPatients = async (params: {
+  search?: string;
+  page: number;
+  limit: number;
+}) => {
+  const res = await api.get("/doctor/patients", { params });
+  return res.data;
+};

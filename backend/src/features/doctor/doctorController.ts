@@ -152,11 +152,37 @@ export const getRelatedDoctorsController = async (
   res.status(200).json({ success: true, doctors });
 };
 
-export const getTopDoctors = async (req: Request, res: Response, next: NextFunction) => {
+export const getTopDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const limit = Number(req.query.limit) || 4;
     const doctors = await doctorService.getTopDoctorsService(limit);
     res.status(200).json({ success: true, doctors });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getDoctorPatients = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const docId = (req as any).doctor.id as string;
+    const search = req.query.search as string;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const result = await doctorService.getDoctorPatientsService(
+      docId,
+      search,
+      page,
+      limit,
+    );
+    return res.json({ success: true, ...result });
   } catch (err) {
     next(err);
   }

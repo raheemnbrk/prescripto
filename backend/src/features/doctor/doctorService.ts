@@ -218,3 +218,57 @@ export const getTopDoctorsService = async (limit: number = 4) => {
     appointmentCount: _count.appointments,
   }));
 };
+
+export const getDoctorPatientsService = async (
+  id: string,
+  search: string,
+  page: number,
+  limit: number = 10,
+) => {
+  const skip = (page - 1) * limit;
+
+  const where = {
+    docId: id,
+    ...(search && {
+      user: {
+        name: {
+          contains: search,
+          mode: "insensitive" as const,
+        },
+      },
+    }),
+  };
+
+  const [appointmentData, users] = await Promise.all([
+    prisma.appointment.findMany({
+      where,
+      select: {
+        user: {
+          omit: {
+            password: true,
+          },
+        },
+      },
+      distinct: ["userId"],
+      skip,
+      take: limit,
+    }),
+
+    prisma.appointment.findMany({
+      where,
+      select: {
+        userId: true,
+      },
+      distinct: ["userId"],
+    }),
+  ]);
+
+  const patients = appointmentData.map((appt) => appt.user);
+
+  return {
+    patients,
+    total: users.length,
+    page,
+    totalPages: Math.ceil(users.length / limit),
+  };
+};

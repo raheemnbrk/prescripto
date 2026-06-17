@@ -2,10 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getAllDoctors,
   getAllSpecializations,
+  getDoctorPatients,
   getRelatedDoctors,
   getSingleDoctor,
   getTopDoctors,
 } from "../lib/api/doctorApi";
+import type { PatientsResponse } from "@/types/doctorType";
 
 export const useDoctors = (search?: string, filter?: string) => {
   return useQuery({
@@ -42,3 +44,14 @@ export const useTopDoctors = (limit = 4) =>
     queryFn: () => getTopDoctors(limit),
     staleTime: 1000 * 60 * 60,
   });
+
+export const useDoctorPatients = (params: {
+  search?: string;
+  page: number;
+  limit: number;
+}) => {
+  return useQuery<PatientsResponse>({
+    queryKey: ["doctor-patients", params],
+    queryFn: () => getDoctorPatients(params),
+  });
+};
