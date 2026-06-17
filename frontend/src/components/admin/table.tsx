@@ -50,7 +50,7 @@ export function DataTable<T>({
                 className="p-8 text-center text-gray-400"
               >
                 <div className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-main border-t-transparent rounded-full animate-spin" />
                   Loading...
                 </div>
               </TableCell>

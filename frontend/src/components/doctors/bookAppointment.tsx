@@ -17,7 +17,7 @@ export default function BookAppointment({ docId, available }: Props) {
     <div className="bg-white border border-gray-100 rounded-3xl p-6 lg:p-8 shadow-sm">
       <div className="flex items-center gap-3 mb-8">
         <div className="p-2.5 rounded-xl bg-indigo-100">
-          <BsCalendar2Week className="w-5 h-5 text-indigo-600" />
+          <BsCalendar2Week className="w-5 h-5 text-main/80" />
         </div>
         <div>
           <h2 className="text-xl font-bold text-gray-900">
@@ -64,7 +64,7 @@ export default function BookAppointment({ docId, available }: Props) {
                         <div
                           className={`px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide ${
                             isToday
-                              ? "bg-indigo-500 text-white"
+                              ? "bg-main text-white"
                               : "bg-white border border-gray-200 text-gray-500"
                           }`}
                         >
@@ -92,8 +92,8 @@ export default function BookAppointment({ docId, available }: Props) {
                             onClick={() => setSelectedSlot(slot)}
                             className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border transition-all ${
                               selectedSlot === slot
-                                ? "bg-indigo-600 text-white border-indigo-600 shadow-sm scale-105"
-                                : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600"
+                                ? "bg-main/80 text-white border-main/80 shadow-sm scale-105"
+                                : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-main/80"
                             }`}
                           >
                             <FiClock className="w-3 h-3 shrink-0" />
@@ -118,7 +118,7 @@ export default function BookAppointment({ docId, available }: Props) {
               {selectedSlot ? (
                 <>
                   <div className="flex items-start gap-3 p-4 bg-white rounded-xl border border-indigo-100 shadow-sm">
-                    <FiCheckCircle className="w-5 h-5 text-indigo-500 mt-0.5 shrink-0" />
+                    <FiCheckCircle className="w-5 h-5 text-main mt-0.5 shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-800 text-sm">
                         Slot Selected
@@ -130,7 +130,7 @@ export default function BookAppointment({ docId, available }: Props) {
                           month: "long",
                         })}
                       </p>
-                      <p className="text-sm font-bold text-indigo-600 mt-1">
+                      <p className="text-sm font-bold text-main/80 mt-1">
                         {new Date(selectedSlot).toLocaleTimeString("en-US", {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -142,7 +142,7 @@ export default function BookAppointment({ docId, available }: Props) {
                   <button
                     onClick={handleBook}
                     disabled={isPending}
-                    className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm cursor-pointer"
+                    className="w-full mt-4 bg-main/80 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm cursor-pointer"
                   >
                     {isPending ? (
                       <>

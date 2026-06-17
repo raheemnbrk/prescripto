@@ -9,6 +9,7 @@ import { authServiceReturn } from "../../shared/types/authTypes";
 import { REFRESH_TOKEN_EXPIRES_MS } from "../../shared/utils/jwt";
 import prisma from "../../shared/config/prisma";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
+import { success } from "zod";
 
 const cookieOptions = {
   httpOnly: true,
@@ -71,17 +72,15 @@ export const loginController = async (
   }
 };
 
-export const getUser = async (
+export const getMe = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { user } = req as any;
-
-    const result = await authService.getUserService(user.id);
-
-    res.status(200).json({ success: true, result });
+    const { id } = (req as any).user;
+    const user = await authService.getUserService(id);
+    res.status(200).json({ success: true, user });
   } catch (err) {
     next(err);
   }
@@ -131,7 +130,11 @@ export const refreshController = async (
 
     res.cookie("refreshToken", result.newRefreshToken, cookieOptions);
 
-    res.status(200).json({ success: true , user : result.user, accessToken: result.newAccessToken });
+    res.status(200).json({
+      success: true,
+      user: result.user,
+      accessToken: result.newAccessToken,
+    });
   } catch (err) {
     next(err);
   }

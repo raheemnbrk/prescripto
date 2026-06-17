@@ -24,7 +24,7 @@ export default function SideBar() {
           className={({ isActive }) =>
             `flex items-center py-3 px-4 gap-3 transition-all ${
               isActive
-                ? "border-r-4 md:border-r-[6px] bg-indigo-500/10 border-indigo-500 text-indigo-500"
+                ? "border-r-4 md:border-r-[6px] bg-main/10 border-main text-main"
                 : "hover:bg-gray-100/90 text-gray-700"
             }`
           }

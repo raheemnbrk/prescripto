@@ -86,7 +86,7 @@ export default function Users() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateParams("search", e.target.value)
               }
-              className="w-full pl-9 border-indigo-200 focus-visible:ring-indigo-500 rounded-md py-5"
+              className="w-full pl-9 border-indigo-200 focus-visible:ring-main rounded-md py-5"
             />
           </div>
 

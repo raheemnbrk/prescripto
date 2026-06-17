@@ -39,7 +39,7 @@ export default function DoctorsFilters() {
           placeholder="Search by name or specialization..."
           value={search}
           onChange={(e) => updateParams("search", e.target.value)}
-          className="pl-9 border-indigo-200 focus-visible:ring-indigo-500 rounded-md py-5"
+          className="pl-9 border-indigo-200 focus-visible:ring-main rounded-md py-5"
         />
       </div>
 

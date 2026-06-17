@@ -69,10 +69,14 @@ export const getAllAppointments = async (
 ) => {
   try {
     const filters = appointmentFilterSchema.parse(req.query);
-    const appointments =
-      await appointmentService.getAllAppointmentsService(filters);
-
-    return res.status(200).json({ success: true, appointments });
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const result = await appointmentService.getAllAppointmentsService(
+      filters,
+      page,
+      limit,
+    );
+    return res.status(200).json({ success: true, ...result });
   } catch (err) {
     next(err);
   }
@@ -105,6 +109,8 @@ export const getDoctorAppointments = async (
   try {
     const filters = appointmentFilterSchema.parse(req.query);
     const docId = (req as any).doctor.id as string;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
     const appointments = await appointmentService.getDoctorAppointments(
       docId,
       filters,

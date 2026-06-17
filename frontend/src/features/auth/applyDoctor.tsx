@@ -24,7 +24,7 @@ export default function ApplyDoctor() {
   const [image, setImage] = useState<File | null>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -61,7 +61,9 @@ export default function ApplyDoctor() {
       formData.append("image", image);
 
       await applyDoctor(formData as any);
-      toast.success("Application submitted successfully. Wait for admin approval.");
+      toast.success(
+        "Application submitted successfully. Wait for admin approval.",
+      );
       navigate("/login");
     } catch (err: any) {
       toast.error(err.response?.data?.message ?? "Something went wrong.");
@@ -82,11 +84,17 @@ export default function ApplyDoctor() {
 
         <div className="flex flex-col items-center mb-6">
           <label htmlFor="image" className="cursor-pointer">
-            <div className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-indigo-500/5">
+            <div className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-main/5">
               {preview ? (
-                <img src={preview} alt="preview" className="w-full h-full object-cover" />
+                <img
+                  src={preview}
+                  alt="preview"
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <span className="text-xs text-gray-400 text-center px-2">Upload Photo</span>
+                <span className="text-xs text-gray-400 text-center px-2">
+                  Upload Photo
+                </span>
               )}
             </div>
           </label>
@@ -105,7 +113,7 @@ export default function ApplyDoctor() {
             value={form.name}
             onChange={handleChange}
             placeholder="Full name"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
           <input
@@ -114,7 +122,7 @@ export default function ApplyDoctor() {
             onChange={handleChange}
             type="email"
             placeholder="Email"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
           <input
@@ -123,7 +131,7 @@ export default function ApplyDoctor() {
             onChange={handleChange}
             type="password"
             placeholder="Password"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
           <input
@@ -131,7 +139,7 @@ export default function ApplyDoctor() {
             value={form.degree}
             onChange={handleChange}
             placeholder="Degree (e.g. MBBS)"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
           <input
@@ -139,7 +147,7 @@ export default function ApplyDoctor() {
             value={form.specialization}
             onChange={handleChange}
             placeholder="Specialization"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
           <input
@@ -149,7 +157,7 @@ export default function ApplyDoctor() {
             type="number"
             min={0}
             placeholder="Years of experience"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
           <input
@@ -159,7 +167,7 @@ export default function ApplyDoctor() {
             type="number"
             min={0}
             placeholder="Consultation fees"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
           <input
@@ -167,7 +175,7 @@ export default function ApplyDoctor() {
             value={form.address}
             onChange={handleChange}
             placeholder="Clinic address"
-            className="border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none"
+            className="border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none"
             required
           />
         </div>
@@ -178,14 +186,14 @@ export default function ApplyDoctor() {
           onChange={handleChange}
           placeholder="About yourself (min 10 characters)"
           rows={4}
-          className="w-full mt-3 border bg-indigo-500/5 border-gray-500/10 rounded px-3 py-3 outline-none resize-none"
+          className="w-full mt-3 border bg-main/5 border-gray-500/10 rounded px-3 py-3 outline-none resize-none"
           required
         />
 
         <button
           type="submit"
           disabled={isPending}
-          className="w-full mt-6 mb-4 bg-indigo-500 hover:bg-indigo-600 transition-all active:scale-95 py-3 rounded text-white font-medium text-base disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full mt-6 mb-4 bg-main hover:bg-main/80 transition-all active:scale-95 py-3 rounded text-white font-medium text-base disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isPending ? "Submitting..." : "Submit Application"}
         </button>

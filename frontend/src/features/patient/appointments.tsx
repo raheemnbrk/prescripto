@@ -42,13 +42,13 @@ export default function MyAppointments() {
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 cursor-pointer rounded-xl text-sm font-medium border transition-all whitespace-nowrap ${
               activeTab === tab
-                ? "bg-indigo-500 text-white border-indigo-500"
-                : "bg-white text-gray-500 border-gray-200 hover:border-indigo-300 hover:text-indigo-500"
+                ? "bg-main text-white border-main"
+                : "bg-white text-gray-500 border-gray-200 hover:border-indigo-300 hover:text-main"
             }`}
           >
             {tab === "All" ? "All" : tab.charAt(0) + tab.slice(1).toLowerCase()}
             {tab === "All" && (
-              <span className="ml-2 bg-indigo-100 text-indigo-600 text-xs px-2 py-0.5 rounded-full">
+              <span className="ml-2 bg-indigo-100 text-main/80 text-xs px-2 py-0.5 rounded-full">
                 {appointments?.length}
               </span>
             )}

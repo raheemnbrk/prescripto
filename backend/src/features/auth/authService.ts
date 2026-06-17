@@ -90,7 +90,6 @@ export const loginService = async (input: loginInput) => {
 export const getUserService = async (id: string) => {
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user) throw new ApiErrors(404, "User not found!");
-
   const { password: _, ...userWithoutPassword } = user;
   return userWithoutPassword;
 };

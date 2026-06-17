@@ -14,8 +14,10 @@ export const bookAppointment = async (
   const doctor = await prisma.doctor.findUnique({ where: { userId: docId } });
   if (!doctor) throw new ApiErrors(404, "Doctor not found.");
   if (!doctor.available) throw new ApiErrors(400, "Doctor is not available.");
-  if (doctor.status !== "APPROVED") throw new ApiErrors(400, "Doctor is not approved.");
-  if (doctor.userId === userId) throw new ApiErrors(400, "You cannot book an appointment with yourself.");
+  if (doctor.status !== "APPROVED")
+    throw new ApiErrors(400, "Doctor is not approved.");
+  if (doctor.userId === userId)
+    throw new ApiErrors(400, "You cannot book an appointment with yourself.");
 
   const slotTime = new Date(date);
   slotTime.setSeconds(0, 0);
@@ -32,7 +34,11 @@ export const bookAppointment = async (
       },
     },
   });
-  if (conflictUser) throw new ApiErrors(409, "You must leave at least 2 hours between appointments.");
+  if (conflictUser)
+    throw new ApiErrors(
+      409,
+      "You must leave at least 2 hours between appointments.",
+    );
 
   const existingSlot = await prisma.appointment.findFirst({
     where: {
@@ -56,7 +62,11 @@ export const bookAppointment = async (
       date: { gte: dayStart, lte: dayEnd },
     },
   });
-  if (sameDayBooking) throw new ApiErrors(409, "You already have an appointment with this doctor today.");
+  if (sameDayBooking)
+    throw new ApiErrors(
+      409,
+      "You already have an appointment with this doctor today.",
+    );
 
   await prisma.appointment.create({
     data: {
@@ -121,31 +131,54 @@ export const cancelAppointmentService = async (id: string, userId: string) => {
 
 export const getAllAppointmentsService = async (
   filters: appointmentFilterInput,
+  page: number,
+  limit: number,
 ) => {
   const { search, searchBy, date, status } = filters;
 
-  const start = date
-    ? new Date(new Date(date).setHours(0, 0, 0, 0))
-    : undefined;
-  const end = date
-    ? new Date(new Date(date).setHours(23, 59, 59, 999))
-    : undefined;
-  const appointments = await prisma.appointment.findMany({
-    where: {
-      ...(search &&
-        searchBy === "doctor" && {
-          doctor: { user: { name: { contains: search, mode: "insensitive" } } },
-        }),
-      ...(search &&
-        searchBy === "user" && {
-          user: { name: { contains: search, mode: "insensitive" } },
-        }),
-      ...(status && { status: status }),
-      ...(date && { date: { gte: start, lte: end } }),
-    },
-  });
+  const start = date ? new Date(new Date(date).setHours(0, 0, 0, 0)) : undefined;
+  const end = date ? new Date(new Date(date).setHours(23, 59, 59, 999)) : undefined;
 
-  return appointments;
+  const skip = (page - 1) * limit;
+
+  const where = {
+    ...(search && searchBy === "doctor" && {
+      doctor: { user: { name: { contains: search, mode: "insensitive" as const } } },
+    }),
+    ...(search && searchBy === "user" && {
+      user: { name: { contains: search, mode: "insensitive" as const } },
+    }),
+    ...(status && { status }),
+    ...(date && { date: { gte: start, lte: end } }),
+  };
+
+  const [appointments, total] = await Promise.all([
+    prisma.appointment.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { date: "desc" },
+      include: {
+        user: { select: { name: true, image: true } },
+        doctor: { include: { user: { select: { name: true, image: true } } } },
+      },
+    }),
+    prisma.appointment.count({ where }),
+  ]);
+
+  return {
+    appointments: appointments.map(({ user, doctor, ...apt }) => ({
+      ...apt,
+      patientName: user.name,
+      patientImage: user.image,
+      doctorName: doctor.user.name,
+      doctorImage: doctor.user.image,
+      specialization: doctor.specialization,
+    })),
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const adminCancelAppointments = async (id: string) => {

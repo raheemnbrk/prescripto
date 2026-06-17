@@ -51,7 +51,7 @@ export default function Register() {
           Sign Up
         </h2>
 
-        <div className="flex items-center my-3 border bg-indigo-500/5 border-gray-500/10 rounded gap-2 pl-3">
+        <div className="flex items-center my-3 border bg-main/5 border-gray-500/10 rounded gap-2 pl-3">
           <svg width="18" height="18" viewBox="0 0 15 15" fill="none">
             <path
               d="M3.125 13.125a4.375 4.375 0 0 1 8.75 0M10 4.375a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"
@@ -73,7 +73,7 @@ export default function Register() {
           />
         </div>
 
-        <div className="flex items-center my-3 border bg-indigo-500/5 border-gray-500/10 rounded gap-2 pl-3">
+        <div className="flex items-center my-3 border bg-main/5 border-gray-500/10 rounded gap-2 pl-3">
           <svg width="18" height="18" viewBox="0 0 15 15" fill="none">
             <path
               d="m2.5 4.375 3.875 2.906c.667.5 1.583.5 2.25 0L12.5 4.375"
@@ -102,7 +102,7 @@ export default function Register() {
           />
         </div>
 
-        <div className="flex items-center mt-3 mb-8 border bg-indigo-500/5 border-gray-500/10 rounded gap-2 pl-3">
+        <div className="flex items-center mt-3 mb-8 border bg-main/5 border-gray-500/10 rounded gap-2 pl-3">
           <svg width="18" height="18" viewBox="0 0 15 15" fill="none">
             <path
               d="M6.25 9.375a1.875 1.875 0 1 0 2.5 0V7.5h-2.5v1.875Z"
@@ -151,7 +151,7 @@ export default function Register() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full mb-4 bg-indigo-500 hover:bg-indigo-600 transition-all active:scale-95 py-3 rounded text-white font-medium text-base disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full mb-4 bg-main hover:bg-main/80 transition-all active:scale-95 py-3 rounded text-white font-medium text-base disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isPending ? "Creating Account..." : "Create Account"}
         </button>
