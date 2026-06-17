@@ -140,23 +140,13 @@ export const refreshController = async (
   }
 };
 
-export const updateProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = updateProfileSchema.parse((req as any).body);
+    const data = updateProfileSchema.parse(req.body);
     const { id } = (req as any).user;
-    const file = (req as any).file;
-
-    const result = await authService.updateProfileService(id, data, file);
-
-    res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      user: result.user,
-    });
+    const file = req.file;
+    const user = await authService.updateProfileService(id, data, file);
+    res.status(200).json({ success: true, user });
   } catch (err) {
     next(err);
   }

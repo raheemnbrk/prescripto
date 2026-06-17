@@ -152,9 +152,6 @@ export const updateProfileService = async (
     imageUrl = await uploadImage(base64, "prescripto/users");
   }
 
-  const existing = await prisma.doctor.findUnique({ where: { userId: id } });
-  if (!existing) throw new ApiErrors(404, "Access denied.please login");
-
   const user = await prisma.user.update({
     where: { id },
     data: {
@@ -167,5 +164,5 @@ export const updateProfileService = async (
   });
 
   const { password: _, ...userWithoutPassword } = user;
-  return { user: userWithoutPassword };
+  return userWithoutPassword;
 };

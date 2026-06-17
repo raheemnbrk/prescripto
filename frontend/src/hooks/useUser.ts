@@ -1,7 +1,8 @@
-import { getMe } from "@/lib/api/user";
+import { getMe, updateProfile } from "@/lib/api/user";
+import { useAuthStore } from "@/store/authStore";
 import type { User } from "@/types/authTypes";
-import { useQuery } from "@tanstack/react-query";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const useUser = () =>
   useQuery<User>({
@@ -9,3 +10,20 @@ export const useUser = () =>
     queryFn: getMe,
     staleTime: 5 * 60 * 1000,
   });
+
+export const useUpdateProfile = () => {
+  const queryClient = useQueryClient();
+  const { setUser } = useAuthStore();
+
+  return useMutation({
+    mutationFn: (data: FormData) => updateProfile(data),
+    onSuccess: (user) => {
+      queryClient.setQueryData(["me"], user);
+      setUser(user);
+      toast.success("Profile updated successfully.");
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message ?? "Something went wrong.");
+    },
+  });
+};

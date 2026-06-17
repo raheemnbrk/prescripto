@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ProfileSkeleton from "@/components/loading/profileSkeleton";
-import { useUser } from "@/hooks/useUser";
+import { useUser, useUpdateProfile } from "@/hooks/useUser";
 import {
   FiCamera,
   FiEdit2,
@@ -9,10 +9,28 @@ import {
   FiCalendar,
   FiUser,
 } from "react-icons/fi";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../../@/components/ui/popover";
+import { Calendar } from "../../../@/components/ui/calendar";
+import { format } from "date-fns";
 
 export default function ProfilePage() {
   const { data: user, isLoading } = useUser();
+  const { mutate: update, isPending } = useUpdateProfile();
   const [isEditing, setIsEditing] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -26,15 +44,51 @@ export default function ProfilePage() {
     setForm({
       name: user.name ?? "",
       phone: user.phoneNumber ?? "",
-      dob: user.dob ?? "",
+      dob: user.dob ? new Date(user.dob).toISOString().split("T")[0] : "",
       gender: user.gender ?? "",
     });
   }, [user]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSave = () => {
+    const formData = new FormData();
+    if (form.name) formData.append("name", form.name);
+    if (form.phone) formData.append("phoneNumber", form.phone);
+    if (form.dob) formData.append("dob", form.dob);
+    if (form.gender) formData.append("gender", form.gender);
+    if (image) formData.append("image", image);
+    update(formData, {
+      onSuccess: () => {
+        setIsEditing(false);
+        setImage(null);
+        setPreview(null);
+      },
+    });
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setImage(null);
+    setPreview(null);
+    if (user) {
+      setForm({
+        name: user.name ?? "",
+        phone: user.phoneNumber ?? "",
+        dob: user.dob ? new Date(user.dob).toISOString().split("T")[0] : "",
+        gender: user.gender ?? "",
+      });
+    }
   };
 
   if (isLoading) return <ProfileSkeleton />;
@@ -51,7 +105,7 @@ export default function ProfilePage() {
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-main hover:bg-main/80 text-white text-sm font-medium rounded-md cursor-pointer transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-main hover:bg-main/80 text-white text-sm font-medium rounded-md transition-all active:scale-95 cursor-pointer"
           >
             <FiEdit2 className="w-4 h-4" />
             Edit Profile
@@ -65,18 +119,29 @@ export default function ProfilePage() {
             <div className="w-24 h-24 rounded-2xl bg-indigo-100 overflow-hidden">
               <img
                 src={
-                  user?.image?.trim()
-                    ? user?.image
-                    : "https://www.gravatar.com/avatar/?d=mp"
+                  preview ??
+                  (user?.image || "https://www.gravatar.com/avatar/?d=mp")
                 }
                 alt="profile"
                 className="w-full h-full object-cover"
               />
             </div>
             {isEditing && (
-              <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-main rounded-xl flex items-center justify-center shadow-md hover:bg-main/80 transition-all">
-                <FiCamera className="w-4 h-4 text-white" />
-              </button>
+              <>
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  className="absolute -bottom-2 -right-2 w-8 h-8 bg-main rounded-md flex items-center justify-center shadow-md hover:bg-main/80 transition-all cursor-pointer"
+                >
+                  <FiCamera className="w-4 h-4 text-white" />
+                </button>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </>
             )}
           </div>
           <div className="text-center sm:text-left">
@@ -104,7 +169,7 @@ export default function ProfilePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
               <FiUser className="w-4 h-4 text-main" />
             </div>
             <div className="flex-1">
@@ -125,7 +190,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
               <FiMail className="w-4 h-4 text-main" />
             </div>
             <div className="flex-1">
@@ -137,7 +202,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
               <FiPhone className="w-4 h-4 text-main" />
             </div>
             <div className="flex-1">
@@ -158,19 +223,36 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
               <FiCalendar className="w-4 h-4 text-main" />
             </div>
             <div className="flex-1">
               <p className="text-xs text-gray-400">Date of Birth</p>
               {isEditing ? (
-                <input
-                  name="dob"
-                  type="date"
-                  value={form.dob}
-                  onChange={handleChange}
-                  className="mt-0.5 text-sm font-medium text-gray-800 border-b border-indigo-300 outline-none bg-transparent"
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 mt-0.5 text-sm font-medium text-gray-800 border-b border-indigo-300 w-full pb-0.5 cursor-pointer">
+                      <FiCalendar className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                      {form.dob
+                        ? format(new Date(form.dob), "MMMM d, yyyy")
+                        : "Pick a date"}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={form.dob ? new Date(form.dob) : undefined}
+                      onSelect={(d) =>
+                        d &&
+                        setForm((prev) => ({
+                          ...prev,
+                          dob: d.toISOString().split("T")[0],
+                        }))
+                      }
+                      captionLayout="dropdown"
+                    />
+                  </PopoverContent>
+                </Popover>
               ) : (
                 <p className="text-sm font-medium text-gray-800">
                   {user?.dob
@@ -186,22 +268,30 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
               <FiUser className="w-4 h-4 text-main" />
             </div>
             <div className="flex-1">
-              <p className="text-xs text-gray-400">Gender</p>
+              <p className="text-xs text-gray-400 mb-1">Gender</p>
               {isEditing ? (
-                <select
-                  name="gender"
+                <Select
                   value={form.gender}
-                  onChange={handleChange}
-                  className="mt-0.5 text-sm font-medium text-gray-800 border-b border-indigo-300 outline-none bg-transparent w-full"
+                  onValueChange={(val) =>
+                    setForm((prev) => ({ ...prev, gender: val }))
+                  }
                 >
-                  <option value="">Select</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
+                  <SelectTrigger className="h-8 text-sm border-0 border-b border-indigo-300 rounded-none px-0 shadow-none focus:ring-0 cursor-pointer">
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male" className="cursor-pointer">
+                      Male
+                    </SelectItem>
+                    <SelectItem value="female" className="cursor-pointer">
+                      Female
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               ) : (
                 <p className="text-sm font-medium text-gray-800 capitalize">
                   {user?.gender ?? "—"}
@@ -213,12 +303,20 @@ export default function ProfilePage() {
 
         {isEditing && (
           <div className="flex gap-3 pt-6 mt-2 border-t border-gray-100">
-            <button className="flex-1 bg-main hover:bg-main/80 text-white font-medium py-2.5 rounded-md transition-all active:scale-95 text-sm cursor-pointer">
-              Save Changes
+            <button
+              onClick={handleSave}
+              disabled={isPending}
+              className="flex-1 bg-main hover:bg-main/80 text-white font-medium py-2.5 rounded-md transition-all active:scale-95 text-sm disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {isPending && (
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              )}
+              {isPending ? "Saving..." : "Save Changes"}
             </button>
             <button
-              onClick={() => setIsEditing(false)}
-              className="flex-1 bg-gray-50 hover:bg-gray-100 text-red-500 font-medium py-2.5 rounded-md transition-all text-sm border border-gray-200 cursor-pointer"
+              onClick={handleCancel}
+              disabled={isPending}
+              className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-600 font-medium py-2.5 rounded-md transition-all text-sm border border-gray-200 disabled:opacity-60 cursor-pointer"
             >
               Cancel
             </button>
