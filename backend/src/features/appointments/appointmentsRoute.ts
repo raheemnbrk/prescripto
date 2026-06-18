@@ -6,6 +6,7 @@ import {
   cancelAppointment,
   completeAppointment,
   confirmAppointment,
+  doctorCancelAppointment,
   getAllAppointments,
   getDoctorAppointments,
   getPatientAppointments,
@@ -53,7 +54,7 @@ aptRouter.post(
   "/doctor/cancel/:id",
   authenticate,
   authorizeDoctor,
-  cancelAppointment,
+  doctorCancelAppointment,
 );
 
 export default aptRouter;

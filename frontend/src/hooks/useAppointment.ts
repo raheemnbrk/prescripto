@@ -88,12 +88,8 @@ export const useDoctorCancelAppointment = () => {
     mutationFn: (id: string) => doctorCancelAppointments(id),
     onSuccess: () => {
       toast.success("Appointment cancelled.");
-
-      queryClient.invalidateQueries({
-        queryKey: ["doctor-appointments"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["doctor-appointments"] });
     },
-
     onError: (err: any) => {
       toast.error(err.response?.data?.message ?? "Something went wrong.");
     },

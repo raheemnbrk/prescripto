@@ -18,7 +18,7 @@ export default function SideBar() {
   ];
 
   const doctorSideBarLinks: sidebarLink[] = [
-    { name: "Dashboard", path: "/", icon: <MdDashboard /> },
+    { name: "dashboard", path: "/doctor", icon: <MdDashboard /> },
     { name: "Patients", path: "patients", icon: <FaUsers /> },
     { name: "profile", path: "profile", icon: <FaUserDoctor /> },
     { name: "Appointments", path: "appointments", icon: <FaBusinessTime /> },
@@ -32,6 +32,7 @@ export default function SideBar() {
     <div className="md:w-64 w-16 border-r min-h-screen text-base border-gray-300 flex flex-col transition-all duration-300 pt-4">
       {sidebarLinks.map((item, index) => (
         <NavLink
+          end
           to={item.path}
           key={index}
           className={({ isActive }) =>

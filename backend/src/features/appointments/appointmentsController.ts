@@ -135,14 +135,10 @@ export const doctorCancelAppointment = async (
 ) => {
   try {
     const id = req.params.id as string;
-    if (!id) throw new ApiErrors(400, "Can't find an appointment");
-
     const docId = (req as any).doctor.id as string;
-
-    await appointmentService.doctorCancelAppointment(id, docId);
-
+    await appointmentService.doctorCancelAppointmentService(docId, id);
     return res
-      .status(201)
+      .status(200)
       .json({ success: true, message: "Appointment cancelled successfully." });
   } catch (err) {
     next(err);
@@ -156,7 +152,7 @@ export const confirmAppointment = async (
 ) => {
   try {
     const id = req.params.id as string;
-    const docId = (req as any).user.id as string;
+    const docId = (req as any).doctor.id as string;
     await appointmentService.confirmAppointmentService(id, docId);
     res.status(200).json({ success: true, message: "Appointment confirmed." });
   } catch (err) {
@@ -171,7 +167,7 @@ export const completeAppointment = async (
 ) => {
   try {
     const id = req.params.id as string;
-    const docId = (req as any).user.id as string;
+    const docId = (req as any).doctor.id as string;
     await appointmentService.completeAppointmentService(id, docId);
     res.status(200).json({ success: true, message: "Appointment completed." });
   } catch (err) {

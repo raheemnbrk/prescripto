@@ -272,12 +272,17 @@ export const getDoctorAppointments = async (
   };
 };
 
-export const doctorCancelAppointment = async (docId: string, id: string) => {
+export const doctorCancelAppointmentService = async (
+  docId: string,
+  id: string,
+) => {
   const appointment = await prisma.appointment.findUnique({
-    where: { id: id, docId: docId },
+    where: { id },
   });
 
-  if (!appointment) throw new ApiErrors(404, "Appointment doesn't exist");
+  if (!appointment) throw new ApiErrors(404, "Appointment not found.");
+  if (appointment.docId !== docId)
+    throw new ApiErrors(403, "Not your appointment.");
   if (appointment.status === "CANCELLED")
     throw new ApiErrors(400, "Appointment is already cancelled.");
   if (appointment.status === "COMPLETED")
@@ -286,7 +291,6 @@ export const doctorCancelAppointment = async (docId: string, id: string) => {
   const twoHoursBefore = new Date(
     appointment.date.getTime() - 2 * 60 * 60 * 1000,
   );
-
   if (new Date() > twoHoursBefore)
     throw new ApiErrors(
       400,
@@ -294,7 +298,7 @@ export const doctorCancelAppointment = async (docId: string, id: string) => {
     );
 
   await prisma.appointment.update({
-    where: { id: id, docId: docId },
+    where: { id },
     data: { status: "CANCELLED" },
   });
 };

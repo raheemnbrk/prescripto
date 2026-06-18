@@ -99,12 +99,22 @@ export default function DoctorAppointments() {
             </button>
           </div>
         ) : row.status === "CONFIRMED" ? (
-          <button
-            className="p-2 rounded-full bg-green-100 cursor-pointer"
-            onClick={() => completeAppointment.mutate(row.id)}
-          >
-            <GrCompliance className="text-green-600"  />{" "}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              className="p-2 rounded-full bg-red-100 cursor-pointer"
+              onClick={() => cancelAppointment.mutate(row.id)}
+              disabled={cancelAppointment.isPending}
+            >
+              <IoClose className="text-red-600" />
+            </button>
+            <button
+              className="p-2 rounded-full bg-green-100 cursor-pointer"
+              onClick={() => completeAppointment.mutate(row.id)}
+              disabled={completeAppointment.isPending}
+            >
+              <GrCompliance className="text-green-600" />
+            </button>
+          </div>
         ) : (
           <p>{"_"}</p>
         ),
@@ -114,7 +124,7 @@ export default function DoctorAppointments() {
   useEffect(() => {
     if (!searchParams.get("page") || !searchParams.get("date")) {
       setSearchParams({ page: "1" }, { replace: true });
-      setSearchParams({ page: today }, { replace: true });
+      setSearchParams({ date: today }, { replace: true });
     }
   }, []);
   return (
