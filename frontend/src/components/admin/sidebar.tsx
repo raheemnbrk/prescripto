@@ -20,7 +20,6 @@ export default function SideBar() {
   const doctorSideBarLinks: sidebarLink[] = [
     { name: "dashboard", path: "/doctor", icon: <MdDashboard /> },
     { name: "Patients", path: "patients", icon: <FaUsers /> },
-    { name: "profile", path: "profile", icon: <FaUserDoctor /> },
     { name: "Appointments", path: "appointments", icon: <FaBusinessTime /> },
   ];
 

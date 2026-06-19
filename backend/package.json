@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.mjs",
   "scripts": {
-    "dev": "nodemon server.ts",
-    "build": "tsc",
+     "dev": "tsx watch server.ts",
+    "build": "prisma generate && tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],

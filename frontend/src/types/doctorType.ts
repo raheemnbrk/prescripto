@@ -49,3 +49,16 @@ export interface PatientsResponse {
   page: number;
   totalPages: number;
 }
+
+export interface DoctorProfile {
+  userId: string;
+  image: string;
+  specialization: string;
+  experience: number;
+  fees: number;
+  about: string;
+  degree: string;
+  address: string;
+  available: boolean;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+}

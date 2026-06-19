@@ -23,6 +23,7 @@ import {
 } from "../../../@/components/ui/popover";
 import { Calendar } from "../../../@/components/ui/calendar";
 import { format } from "date-fns";
+import DoctorProfile from "@/components/doctors/doctorProfile";
 
 export default function ProfilePage() {
   const { data: user, isLoading } = useUser();
@@ -166,7 +167,6 @@ export default function ProfilePage() {
         <h3 className="font-semibold text-gray-800 border-b border-gray-100 pb-3 mb-5">
           Personal Information
         </h3>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
@@ -323,6 +323,8 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+
+      <DoctorProfile role={user?.role} />
     </div>
   );
 }

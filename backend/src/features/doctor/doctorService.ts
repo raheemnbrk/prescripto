@@ -105,9 +105,6 @@ export const updateDoctorProfile = async (
     },
     include: { doctor: true },
   });
-
-  const { password: _, ...userWithoutPassword } = user;
-  return { user: userWithoutPassword };
 };
 
 export const getAllDoctorsService = async (
@@ -147,10 +144,12 @@ export const getDoctorByIDService = async (id: string) => {
 export const getDoctorProfileService = async (id: string) => {
   const doctor = await prisma.doctor.findUnique({
     where: { userId: id },
-    include: { user: { omit: { password: true } } },
+    include: {
+      user: { select: { name: true, email: true, image: true } },
+    },
   });
 
-  if (!doctor) throw new ApiErrors(404, "Access denied,please login again");
+  if (!doctor) throw new ApiErrors(404, "Access denied, please login again.");
 
   const { user, ...rest } = doctor;
   return { ...rest, ...user };
@@ -160,16 +159,12 @@ export const toggleAvailabilityService = async (
   id: string,
   availability: boolean,
 ) => {
-  const doctor = await prisma.doctor.update({
+  await prisma.doctor.update({
     where: { userId: id },
-    data: { available: availability },
-    include: { user: { omit: { password: true } } },
+    data: {
+      available: availability,
+    },
   });
-
-  if (!doctor) throw new ApiErrors(404, "Access denied.please login again");
-
-  const { user, ...rest } = doctor;
-  return { ...rest, ...user };
 };
 
 export const getAllSpecializationService = async () => {

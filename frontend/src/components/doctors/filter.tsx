@@ -42,7 +42,7 @@ export default function Filter() {
           onChange={setSearch}
           type="text"
           placeholder="Search by doctor name..."
-          className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-main focus:border-main transition-all text-gray-700 placeholder:text-gray-400"
+          className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-700 placeholder:text-gray-400"
         />
       </div>
 

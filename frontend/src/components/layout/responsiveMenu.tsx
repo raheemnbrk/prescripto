@@ -72,28 +72,6 @@ export default function ResponsiveMenu({
         >
           Contact
         </NavLink>
-
-        <div className="border-t mt-4 pt-4">
-          <NavLink
-            to="/profile"
-            onClick={() => setShowList(false)}
-            className="block px-4 py-3 rounded-lg hover:bg-gray-100"
-          >
-            My Profile
-          </NavLink>
-
-          <NavLink
-            to="/appointments"
-            onClick={() => setShowList(false)}
-            className="block px-4 py-3 rounded-lg hover:bg-gray-100"
-          >
-            My Appointments
-          </NavLink>
-
-          <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100 text-red-500">
-            Logout
-          </button>
-        </div>
       </div>
     </div>
   );

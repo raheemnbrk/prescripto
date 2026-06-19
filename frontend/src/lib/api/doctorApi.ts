@@ -47,3 +47,20 @@ export const getDoctorPatients = async (params: {
   const res = await api.get("/doctor/patients", { params });
   return res.data;
 };
+
+export const getDoctorProfile = async () => {
+  const res = await api.get("/doctor/profile");
+  return res.data.doctor; 
+};
+
+export const updateDoctorProfile = async (data: FormData) => {
+  const res = await api.post("/doctor/update", data, { 
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const toggleDoctorAvailability = async (availability: boolean) => {
+  const res = await api.post("/doctor/available", { availability }); 
+  return res.data;
+};

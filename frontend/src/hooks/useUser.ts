@@ -8,7 +8,6 @@ export const useUser = () =>
   useQuery<User>({
     queryKey: ["me"],
     queryFn: getMe,
-    staleTime: 5 * 60 * 1000,
   });
 
 export const useUpdateProfile = () => {

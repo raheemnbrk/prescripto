@@ -36,16 +36,11 @@ export const updateDoctor = async (
     const data = updateDoctorSchema.parse((req as any).body);
     const { id } = (req as any).user;
 
-    const result = await doctorService.updateDoctorProfile(
-      id,
-      data,
-      (req as any).file,
-    );
+    await doctorService.updateDoctorProfile(id, data, (req as any).file);
 
     res.status(200).json({
       success: true,
       message: "Doctor profile updated Successfully.",
-      user: result.user,
     });
   } catch (err) {
     next(err);
@@ -110,14 +105,11 @@ export const toggleAvailability = async (
     const { id } = (req as any).doctor;
     const availability = req.body.availability as boolean;
 
-    const doctor = await doctorService.toggleAvailabilityService(
-      id,
-      availability,
-    );
+    await doctorService.toggleAvailabilityService(id, availability);
     const message = availability
       ? "You are now available"
       : "You are now not available.";
-    res.status(200).json({ success: true, message, doctor });
+    res.status(200).json({ success: true, message });
   } catch (err) {
     next(err);
   }

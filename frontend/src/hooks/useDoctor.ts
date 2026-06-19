@@ -1,13 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAllDoctors,
   getAllSpecializations,
   getDoctorPatients,
+  getDoctorProfile,
   getRelatedDoctors,
   getSingleDoctor,
   getTopDoctors,
+  toggleDoctorAvailability,
+  updateDoctorProfile,
 } from "../lib/api/doctorApi";
-import type { PatientsResponse } from "@/types/doctorType";
+import type { DoctorProfile, PatientsResponse } from "@/types/doctorType";
+import { toast } from "sonner";
 
 export const useDoctors = (search?: string, filter?: string) => {
   return useQuery({
@@ -53,5 +57,52 @@ export const useDoctorPatients = (params: {
   return useQuery<PatientsResponse>({
     queryKey: ["doctor-patients", params],
     queryFn: () => getDoctorPatients(params),
+  });
+};
+
+export const useDoctorProfile = (enabled: boolean) =>
+  useQuery<DoctorProfile>({
+    queryKey: ["doctor-profile"],
+    queryFn: getDoctorProfile,
+    enabled,
+  });
+
+export const useToggleDoctorAvailability = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: toggleDoctorAvailability,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["doctor-profile"],
+      });
+
+      toast.success("Availability updated");
+    },
+
+    onError: () => {
+      toast.error("Failed to update availability");
+    },
+  });
+};
+
+export const useUpdateDoctorProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateDoctorProfile,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["doctor-profile"],
+      });
+
+      toast.success("Doctor profile updated successfully");
+    },
+
+    onError: () => {
+      toast.error("Failed to update doctor profile");
+    },
   });
 };
