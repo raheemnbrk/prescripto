@@ -134,14 +134,36 @@ export const getAllAppointmentsService = async (
   page: number,
   limit: number,
 ) => {
-  const { search, searchBy, date, status } = filters;
+  const { search, searchBy, date, status, range } = filters;
 
-  const start = date
-    ? new Date(new Date(date).setHours(0, 0, 0, 0))
-    : undefined;
-  const end = date
-    ? new Date(new Date(date).setHours(23, 59, 59, 999))
-    : undefined;
+  const selectedDate = date ? new Date(date) : undefined;
+
+  const getRangeStart = (fromDate?: Date) => {
+    const base = fromDate ? new Date(fromDate) : new Date();
+    if (range === "last7days")
+      return new Date(base.setDate(base.getDate() - 7));
+    if (range === "last30days")
+      return new Date(base.setDate(base.getDate() - 30));
+    if (range === "last12months")
+      return new Date(base.setMonth(base.getMonth() - 12));
+    return undefined;
+  };
+
+  const rangeStart = getRangeStart(selectedDate);
+  const rangeEnd = selectedDate
+    ? new Date(new Date(selectedDate).setHours(23, 59, 59, 999))
+    : new Date();
+
+  const dateFilter = rangeStart
+    ? { date: { gte: rangeStart, lte: rangeEnd } }
+    : selectedDate
+      ? {
+          date: {
+            gte: new Date(new Date(selectedDate).setHours(0, 0, 0, 0)),
+            lte: new Date(new Date(selectedDate).setHours(23, 59, 59, 999)),
+          },
+        }
+      : {};
 
   const skip = (page - 1) * limit;
 
@@ -157,7 +179,7 @@ export const getAllAppointmentsService = async (
         user: { name: { contains: search, mode: "insensitive" as const } },
       }),
     ...(status && { status }),
-    ...(date && { date: { gte: start, lte: end } }),
+    ...dateFilter,
   };
 
   const [appointments, total] = await Promise.all([

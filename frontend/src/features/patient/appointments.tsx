@@ -1,4 +1,3 @@
-// features/patient/MyAppointmentsPage.tsx
 import { useState } from "react";
 import {
   usePatientAppointments,

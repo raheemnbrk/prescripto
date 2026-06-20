@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Doctor, DoctorsResponse } from "@/types/doctorType";
 import {
+  adminCancelAppointment,
   approveDoctor,
   deleteUser,
   getAdminStats,
@@ -107,7 +108,7 @@ export const useDeleteUser = () => {
 };
 
 export const useAdminAppointments = (filters: AppointmentFilters) => {
-  const { page, search, searchBy, status, range } = filters;
+  const { page, search, searchBy, status, range, date } = filters;
 
   return useQuery<appointmentRes>({
     queryKey: [
@@ -117,6 +118,7 @@ export const useAdminAppointments = (filters: AppointmentFilters) => {
       searchBy ?? "",
       status ?? "",
       range ?? "",
+      date ?? "",
     ],
     queryFn: () => getAllAppointments(filters),
   });
@@ -133,5 +135,23 @@ export const usePendingDoctors = () => {
   return useQuery<Doctor[]>({
     queryKey: ["pending-doctor"],
     queryFn: getPendingDoctors,
+  });
+};
+
+export const useAdminCancelAppointment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => adminCancelAppointment(id),
+    onSuccess: () => {
+      toast.success("Appointment cancelled.");
+
+      queryClient.invalidateQueries({
+        queryKey: ["admin-appointments"],
+      });
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message ?? "Something went wrong.");
+    },
   });
 };

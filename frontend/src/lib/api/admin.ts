@@ -65,3 +65,8 @@ export const getPendingDoctors = async () => {
   const res = await api.get("/admin/pending");
   return res.data.doctors;
 };
+
+export const adminCancelAppointment = async (id: string) => {
+  const res = await api.post(`/appointments/admin/cancel/${id}`);
+  return res.data;
+};
