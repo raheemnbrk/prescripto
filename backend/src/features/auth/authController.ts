@@ -9,15 +9,11 @@ import { authServiceReturn } from "../../shared/types/authTypes";
 import { REFRESH_TOKEN_EXPIRES_MS } from "../../shared/utils/jwt";
 import prisma from "../../shared/config/prisma";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
-import { success } from "zod";
 
 const cookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite:
-    process.env.NODE_ENV === "production"
-      ? ("strict" as const)
-      : ("lax" as const),
+  sameSite: "none" as const,
   maxAge: REFRESH_TOKEN_EXPIRES_MS,
 };
 
@@ -140,7 +136,11 @@ export const refreshController = async (
   }
 };
 
-export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+export const updateProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const data = updateProfileSchema.parse(req.body);
     const { id } = (req as any).user;
