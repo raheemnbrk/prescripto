@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.mjs",
   "scripts": {
-    "dev": "tsx watch server.ts",
-    "build": "prisma generate && tsc",
-    "start": "node dist/server.js"
+    "dev": "nodemon server.ts",
+    "build": "npx prisma generate && tsc",
+    "start": "npx prisma migrate deploy && node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +26,8 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "ws": "^8.21.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "prisma": "^7.8.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -36,7 +37,6 @@
     "@types/multer": "^2.1.0",
     "@types/node": "^25.9.1",
     "nodemon": "^3.1.14",
-    "prisma": "^7.8.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"

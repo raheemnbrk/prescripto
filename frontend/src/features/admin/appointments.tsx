@@ -35,18 +35,13 @@ export default function Appointments() {
     | "last12months"
     | "all"
     | undefined;
-  const today = new Date().toISOString().split("T")[0];
-  const date = searchParams.get("date") || today;
+  const date = searchParams.get("date") || undefined;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     let changed = false;
     if (!params.get("page")) {
       params.set("page", "1");
-      changed = true;
-    }
-    if (!params.get("date")) {
-      params.set("date", today);
       changed = true;
     }
     if (changed) setSearchParams(params, { replace: true });
