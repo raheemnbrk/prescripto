@@ -6,3 +6,10 @@ export interface UsersResponse {
   page: number;
   totalPages: number;
 }
+
+export interface statsRes {
+  totalDoctors: number;
+  totalPatients: number;
+  totalAppointments: number;
+  pendingDoctors: number;
+}

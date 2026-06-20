@@ -4,8 +4,10 @@ import { authorizeAdmin } from "../../shared/middlewares/authorizeAdmin";
 import {
   approveDoctor,
   deleteUser,
+  getAdminStats,
   getAllDoctors,
   getAllUsers,
+  getPendingDoctors,
   rejectDoctor,
 } from "./adminControllers";
 
@@ -17,5 +19,7 @@ adminRouter.post("/reject/:id", authenticate, authorizeAdmin, rejectDoctor);
 
 adminRouter.get("/all-users", authenticate, authorizeAdmin, getAllUsers);
 adminRouter.delete("/delete/:id", authenticate, authorizeAdmin, deleteUser);
+adminRouter.get("/stats", authenticate, authorizeAdmin, getAdminStats);
+adminRouter.get("/pending", authenticate, authorizeAdmin, getPendingDoctors);
 
 export default adminRouter;

@@ -11,7 +11,7 @@ interface sidebarLink {
 
 export default function SideBar() {
   const adminSidebarLinks: sidebarLink[] = [
-    { name: "Dashboard", path: "/", icon: <MdDashboard /> },
+    { name: "Dashboard", path: "/admin", icon: <MdDashboard /> },
     { name: "Users", path: "users", icon: <FaUsers /> },
     { name: "Doctors", path: "doctors", icon: <FaUserDoctor /> },
     { name: "Appointments", path: "appointments", icon: <FaBusinessTime /> },

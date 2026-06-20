@@ -1,15 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { DoctorsResponse } from "@/types/doctorType";
+import type { Doctor, DoctorsResponse } from "@/types/doctorType";
 import {
   approveDoctor,
   deleteUser,
+  getAdminStats,
   getAllAppointments,
   getAllDoctors,
   getALlUsers,
+  getPendingDoctors,
   rejectDoctor,
 } from "@/lib/api/admin";
 import { toast } from "sonner";
-import type { UsersResponse } from "@/types/admin";
+import type { statsRes, UsersResponse } from "@/types/admin";
 import type { AppointmentFilters, appointmentRes } from "@/types/appointments";
 
 export const useAllDoctors = ({
@@ -37,6 +39,10 @@ export const useApproveDoctor = () => {
       queryClient.invalidateQueries({
         queryKey: ["admin-doctors"],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["pending-doctor"],
+      });
     },
 
     onError: (err: any) => {
@@ -55,6 +61,10 @@ export const useRejectDoctor = () => {
 
       queryClient.invalidateQueries({
         queryKey: ["admin-doctors"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["pending-doctor"],
       });
     },
 
@@ -109,5 +119,19 @@ export const useAdminAppointments = (filters: AppointmentFilters) => {
       range ?? "",
     ],
     queryFn: () => getAllAppointments(filters),
+  });
+};
+
+export const useAdminStats = () => {
+  return useQuery<statsRes>({
+    queryKey: ["admin-stats"],
+    queryFn: getAdminStats,
+  });
+};
+
+export const usePendingDoctors = () => {
+  return useQuery<Doctor[]>({
+    queryKey: ["pending-doctor"],
+    queryFn: getPendingDoctors,
   });
 };

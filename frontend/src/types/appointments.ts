@@ -9,6 +9,8 @@ export interface Appointment {
   doctorName: string;
   doctorImage: string;
   specialization: string;
+  patientName: string;
+  patientImage: string;
 }
 
 export interface appointmentRes {

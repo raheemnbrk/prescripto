@@ -55,3 +55,13 @@ export const getAllAppointments = async (filters: AppointmentFilters) => {
   const res = await api.get("/appointments/admin/all", { params: filters });
   return res.data;
 };
+
+export const getAdminStats = async () => {
+  const res = await api.get("/admin/stats");
+  return res.data.stats;
+};
+
+export const getPendingDoctors = async () => {
+  const res = await api.get("/admin/pending");
+  return res.data.doctors;
+};

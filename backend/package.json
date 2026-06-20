@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.mjs",
   "scripts": {
-     "dev": "tsx watch server.ts",
+    "dev": "tsx watch server.ts",
     "build": "prisma generate && tsc",
     "start": "node dist/server.js"
   },

@@ -100,3 +100,25 @@ export const deleteUser = async (id: string) => {
   if (!existing) throw new ApiErrors(404, "User not found");
   await prisma.user.delete({ where: { id } });
 };
+
+export const getAdminStats = async () => {
+  const [totalDoctors, totalPatients, totalAppointments, pendingDoctors] =
+    await Promise.all([
+      prisma.doctor.count({ where: { status: "APPROVED" } }),
+      prisma.user.count({ where: { role: "PATIENT" } }),
+      prisma.appointment.count(),
+      prisma.doctor.count({ where: { status: "PENDING" } }),
+    ]);
+
+  return { totalDoctors, totalPatients, totalAppointments, pendingDoctors };
+};
+
+export const getPendingDoctors = async () => {
+  const doctors = await prisma.doctor.findMany({
+    where: { status: "PENDING" },
+    take: 5,
+  });
+
+  return doctors;
+};
+

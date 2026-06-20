@@ -98,3 +98,29 @@ export const deleteUser = async (
     next(err);
   }
 };
+
+export const getAdminStats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const stats = await adminService.getAdminStats();
+    return res.json({ success: true, stats });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getPendingDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const doctors = await adminService.getPendingDoctors();
+    return res.json({ success: true, doctors });
+  } catch (err) {
+    next(err);
+  }
+};
