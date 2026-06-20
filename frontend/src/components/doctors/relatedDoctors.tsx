@@ -1,6 +1,7 @@
 import { useRelatedDoctors } from "@/hooks/useDoctor";
 import DoctorCardLoading from "../loading/doctorCardLoading";
 import DoctorCard from "./doctorCard";
+import { FiUsers } from "react-icons/fi";
 
 export default function RelatedDoctors({
   id,
@@ -15,6 +16,7 @@ export default function RelatedDoctors({
     isError,
   } = useRelatedDoctors(id, specialization);
 
+
   return (
     <div className="flex flex-col space-y-6">
       <h1 className="text-center text-2xl font-semibold capitalize">
@@ -28,7 +30,10 @@ export default function RelatedDoctors({
         </div>
       )}
       {!isLoading && !isError && doctors?.length === 0 && (
-        <p className="text-center text-gray-500 py-10">No doctors found.</p>
+        <div className="text-center py-20 border-2 border-dashed border-gray-200 rounded-2xl">
+          <FiUsers className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-400 font-medium">No doctors found.</p>
+        </div>
       )}
       {!isLoading && !isError && doctors && doctors.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">

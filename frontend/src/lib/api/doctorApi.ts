@@ -29,7 +29,7 @@ export const getRelatedDoctors = async (
   specialization: string,
 ): Promise<Doctor[]> => {
   const res = await api.get(`/doctor/${id}/related`, {
-    params: specialization,
+    params: { specialization },
   });
   return res.data.doctors;
 };
@@ -50,17 +50,17 @@ export const getDoctorPatients = async (params: {
 
 export const getDoctorProfile = async () => {
   const res = await api.get("/doctor/profile");
-  return res.data.doctor; 
+  return res.data.doctor;
 };
 
 export const updateDoctorProfile = async (data: FormData) => {
-  const res = await api.post("/doctor/update", data, { 
+  const res = await api.post("/doctor/update", data, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data;
 };
 
 export const toggleDoctorAvailability = async (availability: boolean) => {
-  const res = await api.post("/doctor/available", { availability }); 
+  const res = await api.post("/doctor/available", { availability });
   return res.data;
 };

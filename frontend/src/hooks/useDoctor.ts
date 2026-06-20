@@ -10,7 +10,7 @@ import {
   toggleDoctorAvailability,
   updateDoctorProfile,
 } from "../lib/api/doctorApi";
-import type { DoctorProfile, PatientsResponse } from "@/types/doctorType";
+import type { Doctor, DoctorProfile, PatientsResponse } from "@/types/doctorType";
 import { toast } from "sonner";
 
 export const useDoctors = (search?: string, filter?: string) => {
@@ -36,7 +36,7 @@ export const useSpecializations = () => {
 };
 
 export const useRelatedDoctors = (id: string, specialization: string) => {
-  return useQuery({
+  return useQuery<Doctor[]>({
     queryKey: ["related", id, specialization],
     queryFn: () => getRelatedDoctors(id, specialization),
   });

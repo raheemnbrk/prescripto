@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { CalendarIcon } from "lucide-react";
-
 import { Calendar } from "../../../@/components/ui/calendar";
 import { Field } from "../../../@/components/ui/field";
 import {
@@ -19,7 +18,6 @@ import {
 
 function formatDate(date: Date | undefined) {
   if (!date) return "";
-
   return date.toLocaleDateString("en-US", {
     day: "2-digit",
     month: "long",
@@ -32,28 +30,38 @@ function isValidDate(date: Date | undefined) {
   return !isNaN(date.getTime());
 }
 
+function parseLocalDate(val?: string) {
+  if (!val) return undefined;
+  const [year, month, day] = val.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 interface DatePickerInputProps {
-  value?: string; 
+  value?: string;
   onChange: (date: Date | undefined) => void;
   label?: string;
 }
 
-export function DatePickerInput({
-  value,
-  onChange,
-}: DatePickerInputProps) {
+export function DatePickerInput({ value, onChange }: DatePickerInputProps) {
   const [open, setOpen] = React.useState(false);
-
   const [date, setDate] = React.useState<Date | undefined>(
-    value ? new Date(value) : undefined,
+    parseLocalDate(value),
+  );
+  const [month, setMonth] = React.useState<Date | undefined>(
+    parseLocalDate(value),
+  );
+  const [inputValue, setInputValue] = React.useState(
+    formatDate(parseLocalDate(value)),
   );
 
-  const [month, setMonth] = React.useState<Date | undefined>(date);
-  const [inputValue, setInputValue] = React.useState(formatDate(date));
-
-  
   React.useEffect(() => {
-    const newDate = value ? new Date(value) : undefined;
+    if (!value) {
+      setDate(undefined);
+      setMonth(undefined);
+      setInputValue("");
+      return;
+    }
+    const newDate = parseLocalDate(value);
     setDate(newDate);
     setMonth(newDate);
     setInputValue(formatDate(newDate));
@@ -61,7 +69,6 @@ export function DatePickerInput({
 
   return (
     <Field className="w-full md:w-60">
-
       <InputGroup>
         <InputGroupInput
           value={inputValue}
@@ -69,9 +76,7 @@ export function DatePickerInput({
           onChange={(e) => {
             const val = e.target.value;
             setInputValue(val);
-
             const parsed = new Date(val);
-
             if (isValidDate(parsed)) {
               setDate(parsed);
               setMonth(parsed);
@@ -85,7 +90,6 @@ export function DatePickerInput({
             }
           }}
         />
-
         <InputGroupAddon align="inline-end">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -98,7 +102,6 @@ export function DatePickerInput({
                 <CalendarIcon className="w-4 h-4" />
               </InputGroupButton>
             </PopoverTrigger>
-
             <PopoverContent className="w-auto p-0" align="end" sideOffset={10}>
               <Calendar
                 mode="single"
@@ -109,7 +112,6 @@ export function DatePickerInput({
                   setDate(selectedDate);
                   setInputValue(formatDate(selectedDate));
                   setOpen(false);
-
                   onChange(selectedDate);
                 }}
               />

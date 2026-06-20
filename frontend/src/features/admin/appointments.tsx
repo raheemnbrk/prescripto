@@ -79,7 +79,7 @@ export default function Appointments() {
       label: "Doctor",
       key: "doctorName",
       render: (row) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mx-12 md:mx-0">
           <img
             src={
               row.doctorImage?.trim()
@@ -154,8 +154,12 @@ export default function Appointments() {
         value={date}
         onChange={(d) => {
           const params = new URLSearchParams(searchParams);
-          if (!d) params.delete("date");
-          else params.set("date", d.toISOString().split("T")[0]);
+          if (!d) {
+            params.delete("date");
+          } else {
+            const local = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+            params.set("date", local);
+          }
           params.set("page", "1");
           setSearchParams(params);
         }}

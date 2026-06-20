@@ -133,13 +133,12 @@ export default function DoctorAppointments() {
         value={date}
         onChange={(d) => {
           const params = new URLSearchParams(searchParams);
-
           if (!d) {
             params.delete("date");
           } else {
-            params.set("date", d.toISOString().split("T")[0]);
+            const local = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+            params.set("date", local);
           }
-
           params.set("page", "1");
           setSearchParams(params);
         }}

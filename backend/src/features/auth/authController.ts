@@ -10,10 +10,12 @@ import { REFRESH_TOKEN_EXPIRES_MS } from "../../shared/utils/jwt";
 import prisma from "../../shared/config/prisma";
 import { ApiErrors } from "../../shared/utils/ApiErrors";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "none" as const,
+  secure: isProd,
+  sameSite: isProd ? ("none" as const) : ("lax" as const),
   maxAge: REFRESH_TOKEN_EXPIRES_MS,
 };
 

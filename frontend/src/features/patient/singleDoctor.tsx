@@ -9,7 +9,7 @@ export default function SingleDoctor() {
   const { id } = useParams();
   if (!id) return <Navigate to={"/doctors"} replace />;
   const { data: doctor, isLoading, isError } = useDoctor(id);
-  console.log(doctor);
+
   if (isLoading) return <DoctorDetailLoading />;
   if (isError || !doctor) {
     return <p className="text-center text-gray-500 py-20">Doctor not found.</p>;
