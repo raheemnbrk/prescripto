@@ -1,7 +1,8 @@
 import { useAuthStore } from "@/store/authStore";
 import { FaBusinessTime, FaUserDoctor, FaUsers } from "react-icons/fa6";
+import { FiExternalLink } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 interface sidebarLink {
   name: string;
@@ -46,6 +47,11 @@ export default function SideBar() {
           <p className="md:block hidden">{item.name}</p>
         </NavLink>
       ))}
+      <Link to={"/"}>
+        <div className="p-2 rounded-md bg-main text-white mx-auto mt-160 md:hidden w-fit">
+          <FiExternalLink />
+        </div>
+      </Link>
     </div>
   );
 }
