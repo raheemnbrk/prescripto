@@ -179,3 +179,17 @@ export const getDoctorPatients = async (
     next(err);
   }
 };
+
+export const getDoctorStats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = (req as any).doctor;
+    const stats = await doctorService.getDoctorStatsService(id);
+    res.status(200).json({ success: true, stats });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -267,3 +267,37 @@ export const getDoctorPatientsService = async (
     totalPages: Math.ceil(users.length / limit),
   };
 };
+
+export const getDoctorStatsService = async (docId: string) => {
+  const [totalAppointments, todayAppointments, totalPatients, revenue] =
+    await Promise.all([
+      prisma.appointment.count({
+        where: { docId },
+      }),
+      prisma.appointment.count({
+        where: {
+          docId,
+          date: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0)),
+            lte: new Date(new Date().setHours(23, 59, 59, 999)),
+          },
+        },
+      }),
+      prisma.appointment.findMany({
+        where: { docId },
+        select: { userId: true },
+        distinct: ["userId"],
+      }),
+      prisma.appointment.aggregate({
+        where: { docId, status: "COMPLETED" },
+        _sum: { fees: true },
+      }),
+    ]);
+
+  return {
+    totalAppointments,
+    todayAppointments,
+    totalPatients: totalPatients.length,
+    totalRevenue: revenue._sum.fees ?? 0,
+  };
+};
